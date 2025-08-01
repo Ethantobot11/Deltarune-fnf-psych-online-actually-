@@ -216,7 +216,7 @@ jobs:
         - name: Create Version Tag
           run: echo "${{github.run_id}}" > VERSION
         - name: Compile
-          run: haxelib run lime build ios -nosign --app-version="4.0.0-${{ github.run_id}}"
+          run: haxelib run lime build ios -nosign -simulator -D --app-version="4.0.0-${{ github.run_id}}"
         - name: Publish Artifact
           uses: actions/upload-artifact@v4
           with:
