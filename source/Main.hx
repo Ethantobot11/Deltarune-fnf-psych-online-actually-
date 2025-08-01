@@ -70,6 +70,7 @@ class Main extends Sprite
 
 	public static function main():Void
 	{
+		#if !mobile
 		if (Path.normalize(Sys.getCwd()) != Path.normalize(lime.system.System.applicationDirectory)) {
 			Sys.setCwd(lime.system.System.applicationDirectory);
 
@@ -81,7 +82,7 @@ class Main extends Sprite
 					"Invalid Runtime Path!");
 				Sys.exit(1);
 			}
-		}
+			#end
 		
 		Lib.current.addChild(view3D = new online.away.View3DHandler());
 		Lib.current.addChild(new Main());
@@ -93,7 +94,13 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-
+		#if mobile
+		#if android
+		StorageUtil.requestPermissions();
+		#end
+		Sys.setCwd(StorageUtil.getStorageDirectory());
+		#end
+			
 		if (stage != null)
 		{
 			init();
