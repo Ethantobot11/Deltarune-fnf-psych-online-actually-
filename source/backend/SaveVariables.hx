@@ -1,11 +1,12 @@
 package backend;
 
 class SaveVariables {
-    // Touch UI Settings
-    public static var hitboxType:String = "Normal"; // e.g., "Normal", "Box", etc.
-    public static var hitboxPos:String = "Bottom";  // e.g., "Top", "Bottom", "Custom"
-    public static var controlsAlpha:Float = 0.8;    // Transparency for touch controls
-
+    // Mobile-specific variables
+    public static var dynamicColors:Bool = true;
+    public static var controlsAlpha:Float = 0.8;
+    public static var hitboxPos:String = "Bottom"; // Possible values: "Top", "Bottom", etc.
+    public static var hitboxType:String = "Normal"; // Possible values: "Normal", "Simple", "Advanced"
+    
     // Visual Settings
     public static var dynamicColors:Bool = true;    // Whether the UI uses dynamic colors
 
