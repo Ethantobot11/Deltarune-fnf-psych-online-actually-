@@ -219,9 +219,8 @@ jobs:
           run: echo "${{github.run_id}}" > VERSION
         - name: Compile
           run: haxelib run lime build ios -final -nosign -D -clean -v -Dsource-header -Dforce_libcpp -DHXCPP_M64  --app-version="4.0.0-${{ github.run_id}}"
-       
         - name: Make IPA
-          if: input.name == 'macos-latest'
+          if: inputs.name == 'iOS'
           run: |
             brew install ldid
             cd export/release/ios/build/${{ env.PROJECT_NAME }}.app
