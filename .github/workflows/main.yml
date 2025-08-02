@@ -110,15 +110,15 @@ jobs:
         - name: Compile
           run: haxelib run lime build ios -final -nosign -D -clean -v -Dsource-header -Dforce_libcpp -DHXCPP_M64  --app-version="4.0.0-${{ github.run_id}}"
         - name: Make IPA
-          if: inputs.name == 'macos-latest'
+          if: runner.os == 'macos-latest'
           run: |
             brew install ldid
-            cd export/release/ios/build/${{ env.PROJECT_NAME }}.app
-            ldid -S../../../${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.entitlements ${{ env.PROJECT_NAME }}
+            cd export/release/ios/build/PsychEngine.app
+            ldid -S../../../PsychEngine/PsychEngine.entitlements PsychEngine
             cd ..
             mkdir Payload
-            mv ${{ env.PROJECT_NAME }}.app Payload
-            zip -r ${{ env.PROJECT_NAME }}.ipa Payload
+            mv PsychEngine.app Payload
+            zip -r PsychEngine.ipa Payload
         - name: Publish Artifact
           uses: actions/upload-artifact@v4
           with:
@@ -150,7 +150,7 @@ jobs:
     - name: Zip artifacts
       run: |
         zip -r androidBuild androidBuild/
-        zip -r /home/runner/${{ env.PROJECT_NAME }}-iOS.zip ${{ github.workspace }}/${{ env.PROJECT_NAME }}.ipa
+        zip -r /home/runner/PsychEngine-iOS.zip ${{ github.workspace }}/PsychEngine.ipa
 
 
     - name: Upload Android build to the release
