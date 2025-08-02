@@ -188,6 +188,8 @@ class Main extends Sprite
 		//internal c++ exceptions
 		untyped __global__.__hxcpp_set_critical_error_handler(onCrash);
 
+		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
+
 		#if DISCORD_ALLOWED
 		DiscordClient.initialize();
 		#end
@@ -237,7 +239,8 @@ class Main extends Sprite
 			} catch (exc) {}
 			online.network.Auth.saveClose();
 		});
-
+			
+                #if !mobile
 		Lib.application.window.onDropFile.add(path -> {
 			if (FileSystem.isDirectory(path))
 				return;
@@ -253,6 +256,7 @@ class Main extends Sprite
 				});
 			}
 		});
+		#end
 
 		// clear messages before the current state gets destroyed and replaced with another
 		FlxG.signals.preStateSwitch.add(() -> {
