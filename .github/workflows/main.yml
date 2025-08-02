@@ -113,7 +113,7 @@ jobs:
            runner.os == 'macOS'
           run: |
             brew install ldid
-            cd export/release/ios/build/PsychEngine.app
+            cd export/release/ios/build/Release-iphoneos/PsychEngine.app
             ldid -S../../../PsychEngine/PsychEngine.entitlements PsychEngine
             cd ..
             mkdir Payload
