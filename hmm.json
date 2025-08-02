@@ -20,7 +20,7 @@
       "type": "git",
       "dir": null,
       "ref": null,
-      "url": "https://github.com/Ethantobot11/lime"
+      "url": "https://github.com/th2l-devs/lime"
     },
     {
       "name": "lime",
@@ -65,6 +65,13 @@
       "version": "4.3.2"
     },
     {
+      "name": "hxcpp",
+      "type": "git",
+      "dir": null,
+      "ref": null,
+      "url": "https://github.com/th2l-devs/hxcpp"
+    },
+    {
       "name": "tjson",
       "type": "haxelib",
       "version": "1.4.0"
@@ -74,7 +81,7 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/Snirozu/SScript-7.7.0"
+      "url": "https://github.com/th2l-devs/SScript"
     },
     {
       "name": "hxdiscord_rpc",
@@ -86,7 +93,7 @@
       "type": "git",
       "dir": null,
       "ref": "master",
-      "url": "https://github.com/Snirozu/linc_luajit"
+      "url": "https://github.com/th2l-devs/linc_luajit"
     },
     {
       "name": "colyseus",
