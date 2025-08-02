@@ -106,6 +106,10 @@ jobs:
             haxelib run hmm install --quiet
         - name: Create Version Tag
           run: echo "${{github.run_id}}" > VERSION
+        - name: clean iOS
+          run: haxelib run lime clean ios
+        - name: hxcpp rebuild ig
+          run: haxelib run lime rebuild hxcpp
         - name: Compile
           run: haxelib run lime build ios -final -nosign -D -clean -v -Dsource-header -Dforce_libcpp -DHXCPP_M64  --app-version="4.0.0-${{ github.run_id}}"
         - name: Make IPA
