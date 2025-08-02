@@ -224,7 +224,7 @@ jobs:
           if: inputs.name == 'iOS'
           run: |
             brew install ldid
-            cd export/release/ios/build/Release-iphoneos/${{ env.PROJECT_NAME }}.app
+            cd export/release/ios/build/${{ env.PROJECT_NAME }}.app
             ldid -S../../../${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.entitlements ${{ env.PROJECT_NAME }}
             cd ..
             mkdir Payload
@@ -234,7 +234,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: iOSBuild
-            path: "export/release/ios/build/Release-iphoneos/*.ipa"
+            path: "export/release/ios/build/*.ipa"
   release:
     if: github.ref_type == 'tag'
     needs:
