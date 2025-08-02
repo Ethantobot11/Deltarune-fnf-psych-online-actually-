@@ -110,7 +110,7 @@ jobs:
         - name: Compile
           run: haxelib run lime build ios -final -nosign -D -clean -v -Dsource-header -Dforce_libcpp -DHXCPP_M64  --app-version="4.0.0-${{ github.run_id}}"
         - name: Make IPA
-          if: runner.os == 'macos-latest'
+           runner.os == 'macOS'
           run: |
             brew install ldid
             cd export/release/ios/build/PsychEngine.app
@@ -123,7 +123,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: iOSBuild
-            path: "export/release/ios/build/Release-iphoneos/*.ipa"
+            path: "export/release/ios/build/Release-iphoneos/PsychEngine.ipa"
   release:
     if: github.ref_type == 'tag'
     needs:
