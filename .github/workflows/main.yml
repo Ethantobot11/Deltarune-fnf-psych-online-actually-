@@ -219,11 +219,21 @@ jobs:
           run: echo "${{github.run_id}}" > VERSION
         - name: Compile
           run: haxelib run lime build ios -final -nosign -D -clean -v -Dsource-header -Dforce_libcpp -DHXCPP_M64  --app-version="4.0.0-${{ github.run_id}}"
+        - name: Make IPA
+          if: inputs.name == 'iOS'
+          run: |
+            brew install ldid
+            cd export/release/ios/build/Release-iphoneos/${{ env.PROJECT_NAME }}.app
+            ldid -S../../../${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.entitlements ${{ env.PROJECT_NAME }}
+            cd ..
+            mkdir Payload
+            mv ${{ env.PROJECT_NAME }}.app Payload
+            zip -r ${{ env.PROJECT_NAME }}.ipa Payload
         - name: Publish Artifact
           uses: actions/upload-artifact@v4
           with:
             name: iOSBuild
-            path: export/release/ios/build/
+            path: export/release/ios/build/Release-iphoneos/*.ipa
   release:
     if: github.ref_type == 'tag'
     needs:
@@ -253,6 +263,7 @@ jobs:
         zip -r linuxBuild.zip linuxBuild/
         zip -r macBuild.zip macBuild/
         zip -r androidBuild androidBuild/
+        zip -r /home/runner/${{ env.PROJECT_NAME }}-iOS.zip ${{ github.workspace }}/${{ env.PROJECT_NAME }}.ipa
 
     - name: Upload Windows build to the release
       uses: actions/upload-release-asset@v1.0.1
