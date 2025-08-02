@@ -12,6 +12,8 @@
 * Skins Support
 * Leaderboards
 * Erect/Nightmare Difficulty Support
+* MOBILE ?
+* [![Build](https://github.com/Ethantobot11/Deltarune-fnf-psych-online-actually-/actions/workflows/main.yml/badge.svg)](https://github.com/Ethantobot11/Deltarune-fnf-psych-online-actually-/actions/workflows/main.yml)
 
 ### Planned
 * Further Psych Engine 1.0 Mod Support (1.0.0 is no longer planned sorry, too much work!) 
