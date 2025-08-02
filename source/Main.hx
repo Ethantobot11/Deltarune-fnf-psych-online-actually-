@@ -21,7 +21,7 @@ import states.TitleState;
 import lime.graphics.Image;
 #end
 
-import sys.FileSystem;
+import backend.io.PsychFileSystem as FileSystem
 
 //crash handler stuff
 import openfl.events.UncaughtErrorEvent;
