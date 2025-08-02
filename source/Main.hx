@@ -16,6 +16,9 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
 import states.TitleState;
+#if mobile
+import mobile.backend.MobileScaleMode;
+#end
 
 #if linux
 import lime.graphics.Image;
@@ -172,13 +175,22 @@ class Main extends Sprite
 		}
 		#end
 
-		#if linux
-		Lib.current.stage.window.setIcon(Image.fromFile("icon.png"));
+		#if (linux || mac)
+		final icon:Image = Image.fromFile("icon.png");
+		Lib.current.stage.window.setIcon(icon);
 		#end
 
 		#if html5
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
+		#end
+
+		FlxG.fixedTimestep = false;
+		FlxG.game.focusLostFramerate = #if mobile 30 #else 60 #end;
+		#if web
+		FlxG.keys.preventDefaultKeys.push(TAB);
+		#else
+		FlxG.keys.preventDefaultKeys = [TAB];
 		#end
 		
 		//haxe errors caught by openfl
@@ -193,7 +205,14 @@ class Main extends Sprite
 		#if DISCORD_ALLOWED
 		DiscordClient.initialize();
 		#end
-
+		
+		#if mobile
+		lime.system.System.allowScreenTimeout = ClientPrefs.data.screensaver; 		
+		FlxG.scaleMode = new MobileScaleMode();
+		#end
+			
+                Application.current.window.vsync = ClientPrefs.data.vsync
+			
 		// shader coords fix
 		FlxG.signals.gameResized.add(function (w, h) {
 		     if (FlxG.cameras != null) {
