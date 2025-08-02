@@ -53,6 +53,8 @@ jobs:
             sudo apt-get install libvlc-dev
             sudo apt-get install libvlccore-dev
             haxelib setup ~/haxelib
+            haxelib install openfl --quiet
+            haxelib install flixel 5.5.0 --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
             haxelib install hmm --quiet
@@ -96,6 +98,8 @@ jobs:
         - name: Install Haxelib
           run: |
             haxelib setup ~/haxelib
+            haxelib install openfl --quiet
+            haxelib install flixel 5.5.0 --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
             haxelib install hmm --quiet
