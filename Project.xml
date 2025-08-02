@@ -110,6 +110,7 @@
 
 	<haxelib name="flixel" />
 	<haxelib name="flixel-ui" />
+	<haxelib name="flixel-tools" />
 	<haxelib name="flixel-addons" />
 	<haxelib name="lime" />
         <haxelib name="openfl" />
