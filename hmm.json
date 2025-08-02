@@ -2,7 +2,7 @@
   "dependencies": [
     {
       "name": "format",
-      "type" "haxelib",
+      "type": "haxelib",
       "version": "3.8.0"
     },
     {
