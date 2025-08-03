@@ -10,7 +10,7 @@ import flixel.input.mouse.FlxMouseButton;
 #end
 import shaders.flixel.system.FlxShader;
 import backend.SaveVariables;
-import flixel.addons.FlxDestroyUtil;
+import flixel.addons.util.FlxDestroyUtil;
 
 
 /**
