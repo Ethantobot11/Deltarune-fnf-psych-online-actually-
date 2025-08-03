@@ -12,8 +12,6 @@ import states.TitleState;
 
 // Add a variable here and it will get automatically saved
 class SaveVariables {
-	// Add a variable here and it will get automatically saved
-@:structInit class SaveVariables {
 	// Mobile and Mobile Controls Releated
 	public var extraHints:String = "NONE"; // mobile extra hint option
 	public var hitboxPos:Bool = true; // hitbox extra hint position option
