@@ -44,8 +44,8 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true"
-		require-shaders="true" />
+         <window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0"
+		 resizable="false" />
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0"
@@ -122,7 +122,7 @@
 	<haxelib name="json2object" />
 	<haxelib name="hxjsonast" />
 	<haxelib name="flxanimate" />
-	<haxelib name="lumod" if="LUA_ALLOWED" />
+	<haxelib name="lumod" />
 	<haxelib name="actuate" />
 	<haxelib name="compiletime" />
 	<haxelib name="funkin.vis" />
