@@ -17,10 +17,8 @@
 	<app preloader="flixel.system.FlxPreloader" />
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
-	<set name="SWF_VERSION" value="11.8" />
-	
-	<!-- _________________________ IOS Shit Xcode _________________________ -->
-	<platform name="ios" deployment="15" />
+	<set name="SWF_VERSION" value="11.8" /
+		
 	<!-- ______________________ PSYCH ENGINE CUSTOMIZATION ______________________ -->
 
 	<define name="MODS_ALLOWED" />
@@ -46,8 +44,8 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0"
-		resizable="false" />
+	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true"
+		require-shaders="true" allow-high-dpi="true" />>
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0"
@@ -128,7 +126,7 @@
 	<haxelib name="json2object" />
 	<haxelib name="hxjsonast" />
 	<haxelib name="flxanimate" />
-	<haxelib name="lumod" />
+	<haxelib name="lumod" if="LUA_ALLOWED" />
 	<haxelib name="actuate" />
 	<haxelib name="compiletime" />
 	<haxelib name="funkin.vis" />
@@ -147,6 +145,10 @@
 	<haxelib name="hxcpp-debug-server" if="debug"/>
 	<haxedef name="HXC_LIBVLC_LOGGING" if="VIDEOS_ALLOWED debug" />
 	<haxedef name="LUMOD_HSCRIPT" />
+
+	<!-- Disable Discord IO Thread -->
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc" />
+	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -200,7 +202,7 @@
 	<!-- Allow Access to Engine Files for Mobile -->
 	<haxedef name="SHARE_MOBILE_FILES" if="mobile" />
 
-	<!-- <haxedef name="message.reporting" value="pretty" /> -->
+	<haxedef name="message.reporting" value="pretty" />
 	<haxedef name='no-deprecation-warnings' />
 
 	<!--Avoid memory leaks with for loops in HScript-->
