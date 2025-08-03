@@ -19,8 +19,8 @@
       "name": "lime",
       "type": "git",
       "dir": null,
-      "ref": null,
-      "url": "https://github.com/th2l-devs/lime"
+      "ref": "main",
+      "url": "https://github.com/kittycathy233/lime"
     },
     {
       "name": "lime",
@@ -31,7 +31,7 @@
       "name": "openfl",
       "type": "git",
       "dir": null,
-      "ref": null,
+      "ref": "develop",
       "url": "https://github.com/th2l-devs/openfl"
     },
     {
@@ -43,7 +43,7 @@
       "name": "flixel",
       "type": "git",
       "dir": null,
-      "ref": null,
+      "ref": "main",
       "url": "https://github.com/HomuHomu833/flixel"
     },
     {
@@ -65,7 +65,7 @@
       "name": "hxcpp",
       "type": "git",
       "dir": null,
-      "ref": null,
+      "ref": "main",
       "url": "https://github.com/th2l-devs/hxcpp"
     },
     {
@@ -177,7 +177,7 @@
       "name": "hxvlc",
       "type": "git",
       "dir": null,
-      "ref": null,
+      "ref": "main",
       "url": "https://github.com/th2l-devs/hxvlc"
     },
     {
