@@ -23,11 +23,21 @@
       "url": "https://github.com/th2l-devs/lime"
     },
     {
+      "name": "lime",
+      "type": "haxelib",
+      "version": "8.1.3"
+    },
+    {
       "name": "openfl",
       "type": "git",
       "dir": null,
       "ref": null,
       "url": "https://github.com/th2l-devs/openfl"
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": "9.3.3"
     },
     {
       "name": "flixel",
@@ -60,10 +70,8 @@
     },
     {
       "name": "hxcpp",
-      "type": "git",
-      "dir": null,
-      "ref": null,
-      "url": "https://github.com/th2l-devs/hxcpp"
+      "type": "haxelib",
+      "version": "4.3.2"
     },
     {
       "name": "tjson",
