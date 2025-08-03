@@ -135,7 +135,7 @@ class ClientPrefs {
 		'note_up'		=> [W, UP],
 		'note_left'		=> [A, LEFT],
 		'note_down'		=> [S, DOWN],
-		'note_right'	=> [D, RIGHT],
+		'note_right'	        => [D, RIGHT],
 		
 		'ui_up'			=> [W, UP],
 		'ui_left'		=> [A, LEFT],
@@ -150,9 +150,9 @@ class ClientPrefs {
 		'sidebar'		=> [GRAVEACCENT],
 		'fav'			=> [Q],
 		
-		'volume_mute'	=> [ZERO],
+		'volume_mute'	        => [ZERO],
 		'volume_up'		=> [NUMPADPLUS, PLUS],
-		'volume_down'	=> [NUMPADMINUS, MINUS],
+		'volume_down'	        => [NUMPADMINUS, MINUS],
 		
 		'debug_1'		=> [SEVEN],
 		'debug_2'		=> [EIGHT]
@@ -161,7 +161,7 @@ class ClientPrefs {
 		'note_up'		=> [DPAD_UP, Y],
 		'note_left'		=> [DPAD_LEFT, X],
 		'note_down'		=> [DPAD_DOWN, A],
-		'note_right'	=> [DPAD_RIGHT, B],
+		'note_right'	        => [DPAD_RIGHT, B],
 		
 		'ui_up'			=> [DPAD_UP, LEFT_STICK_DIGITAL_UP],
 		'ui_left'		=> [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT],
@@ -180,7 +180,7 @@ public static var mobileBinds:Map<String, Array<MobileInputID>> = [
 		'note_up'		=> [NOTE_UP],
 		'note_left'		=> [NOTE_LEFT],
 		'note_down'		=> [NOTE_DOWN],
-		'note_right'	=> [NOTE_RIGHT],
+		'note_right'	        => [NOTE_RIGHT],
 
 		'ui_up'			=> [UP],
 		'ui_left'		=> [LEFT],
@@ -220,7 +220,7 @@ public static var mobileBinds:Map<String, Array<MobileInputID>> = [
 	public static function clearInvalidKeys(key:String) {
 		var keyBind:Array<FlxKey> = keyBinds.get(key);
 		var gamepadBind:Array<FlxGamepadInputID> = gamepadBinds.get(key);
-        var mobileBind:Array<MobileInputID> = mobileBinds.get(key);
+                var mobileBind:Array<MobileInputID> = mobileBinds.get(key);
 		while(keyBind != null && keyBind.contains(NONE)) keyBind.remove(NONE);
 		while(gamepadBind != null && gamepadBind.contains(NONE)) gamepadBind.remove(NONE);
 		while(mobileBind != null && mobileBind.contains(NONE)) mobileBind.remove(NONE)
@@ -229,7 +229,7 @@ public static var mobileBinds:Map<String, Array<MobileInputID>> = [
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
 		defaultButtons = gamepadBinds.copy();
-        defaultMobileBinds = mobileBinds.copy();
+                defaultMobileBinds = mobileBinds.copy();
 	}
 
 	public static function saveSettings() {
@@ -245,7 +245,7 @@ public static var mobileBinds:Map<String, Array<MobileInputID>> = [
 		save.bind('controls_v3', CoolUtil.getSavePath());
 		save.data.keyboard = keyBinds;
 		save.data.gamepad = gamepadBinds;
-        save.data.mobile = mobileBinds;
+                save.data.mobile = mobileBinds;
 		save.flush();
 		FlxG.log.add("Settings saved!");
 	}
