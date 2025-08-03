@@ -17,11 +17,6 @@
     },
     {
       "name": "lime",
-      "type": "haxelib",
-      "version": "8.1.3"
-    },
-    {
-      "name": "lime",
       "type": "git",
       "dir": null,
       "ref": null,
@@ -33,11 +28,6 @@
       "dir": null,
       "ref": null,
       "url": "https://github.com/th2l-devs/openfl"
-    },
-    {
-      "name": "openfl",
-      "type": "haxelib",
-      "version": "9.3.3"
     },
     {
       "name": "flixel",
