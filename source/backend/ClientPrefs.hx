@@ -10,7 +10,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 
 import states.TitleState;
 
-// Add a variable here and it will get automatically saved
+ Add a variable here and it will get automatically saved
 @:structInit class SaveVariables {
 	// Mobile and Mobile Controls Releated
 	public var extraHints:String = "NONE"; // mobile extra hint option
@@ -22,7 +22,7 @@ import states.TitleState;
 	public var hitboxType:String = "Gradient";
 	public var vsync:Bool = false;
 	public var disableOnlineShaders:Bool = false;
-	
+
 	public var downScroll:Bool = false;
 	public var middleScroll:Bool = false;
 	public var opponentStrums:Bool = true;
@@ -157,7 +157,7 @@ class ClientPrefs {
 		'debug_1'		=> [SEVEN],
 		'debug_2'		=> [EIGHT]
 	];
-	public static var mobileBinds:Map<String, Array<MobileInputID>> = [
+	public static var gamepadBinds:Map<String, Array<FlxGamepadInputID>> = [
 		'note_up'		=> [DPAD_UP, Y],
 		'note_left'		=> [DPAD_LEFT, X],
 		'note_down'		=> [DPAD_DOWN, A],
@@ -176,7 +176,24 @@ class ClientPrefs {
 		'sidebar'		=> [],
 		'fav'			=> [Y]
 	];
-	public static var defaultMobileBinds:Map<String, Array<MobileInputID>> = null;
+public static var mobileBinds:Map<String, Array<MobileInputID>> = [
+		'note_up'		=> [NOTE_UP],
+		'note_left'		=> [NOTE_LEFT],
+		'note_down'		=> [NOTE_DOWN],
+		'note_right'	=> [NOTE_RIGHT],
+
+		'ui_up'			=> [UP],
+		'ui_left'		=> [LEFT],
+		'ui_down'		=> [DOWN],
+		'ui_right'		=> [RIGHT],
+
+		'accept'		=> [A],
+		'back'			=> [B],
+		'pause'			=> [#if android NONE #else P #end],
+		'reset'			=> [NONE],
+		'taunt'			=> [T]
+	];
+    public static var defaultMobileBinds:Map<String, Array<MobileInputID>> = null;
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
 	public static var defaultButtons:Map<String, Array<FlxGamepadInputID>> = null;
 
@@ -203,16 +220,16 @@ class ClientPrefs {
 	public static function clearInvalidKeys(key:String) {
 		var keyBind:Array<FlxKey> = keyBinds.get(key);
 		var gamepadBind:Array<FlxGamepadInputID> = gamepadBinds.get(key);
-		var mobileBind:Array<MobileInputID> = mobileBinds.get(key);
+        var mobileBind:Array<MobileInputID> = mobileBinds.get(key);
 		while(keyBind != null && keyBind.contains(NONE)) keyBind.remove(NONE);
 		while(gamepadBind != null && gamepadBind.contains(NONE)) gamepadBind.remove(NONE);
-		while(mobileBind != null && mobileBind.contains(NONE)) mobileBind.remove(NONE);
+		while(mobileBind != null && mobileBind.contains(NONE)) mobileBind.remove(NONE)
 	}
 
 	public static function loadDefaultKeys() {
 		defaultKeys = keyBinds.copy();
 		defaultButtons = gamepadBinds.copy();
-		defaultMobileBinds = mobileBinds.copy();
+        defaultMobileBinds = mobileBinds.copy();
 	}
 
 	public static function saveSettings() {
@@ -228,7 +245,7 @@ class ClientPrefs {
 		save.bind('controls_v3', CoolUtil.getSavePath());
 		save.data.keyboard = keyBinds;
 		save.data.gamepad = gamepadBinds;
-		save.data.mobile = mobileBinds;
+        save.data.mobile = mobileBinds;
 		save.flush();
 		FlxG.log.add("Settings saved!");
 	}
@@ -300,16 +317,24 @@ class ClientPrefs {
 					if(gamepadBinds.exists(control)) gamepadBinds.set(control, keys);
 				}
 			}
-			if(save.data.mobile != null) {
+            if(save.data.mobile != null) {
 				var loadedControls:Map<String, Array<MobileInputID>> = save.data.mobile;
 				for (control => keys in loadedControls)
 					if(mobileBinds.exists(control)) mobileBinds.set(control, keys);
-				}
 			}
 			reloadVolumeKeys();
 		}
 
 		//away3d.debug.Debug.active = ClientPrefs.isDebug();
+	}
+
+	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
+		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
+		var daGameplaySetting:Dynamic = GameClient.isConnected() ? GameClient.getGameplaySetting(name) : data.gameplaySettings.get(name);
+		if (PlayState.replayData?.gameplay_modifiers != null) {
+			daGameplaySetting = PlayState.replayData?.gameplay_modifiers?.get(name);
+		}
+		return /*PlayState.isStoryMode ? defaultValue : */ (daGameplaySetting != null ? daGameplaySetting : defaultValue);
 	}
 
 	public static function reloadVolumeKeys() {
@@ -318,8 +343,8 @@ class ClientPrefs {
 		TitleState.volumeUpKeys = keyBinds.get('volume_up').copy();
 		toggleVolumeKeys(true);
 	}
-	public static function toggleVolumeKeys(?turnOn:Bool = true) {
-		if(!Controls.instance.mobileC && turnOn)
+	public static function toggleVolumeKeys(turnOn:Bool) {
+                if(!Controls.instance.mobileC && turnOn)
 		{
 			FlxG.sound.muteKeys = TitleState.muteKeys;
 			FlxG.sound.volumeDownKeys = TitleState.volumeDownKeys;
@@ -429,13 +454,4 @@ class ClientPrefs {
 		else
 			return PlayState.instance?.opponentPlayer?.noteSkin ?? defaultData.noteSkin;
 	}
-
-	public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
-		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
-		var daGameplaySetting:Dynamic = GameClient.isConnected() ? GameClient.getGameplaySetting(name) : data.gameplaySettings.get(name);
-		if (PlayState.replayData?.gameplay_modifiers != null) {
-			daGameplaySetting = PlayState.replayData?.gameplay_modifiers?.get(name);
-
-		return /*PlayState.isStoryMode ? defaultValue : */ (daGameplaySetting != null ? daGameplaySetting : defaultValue);
-
 }
