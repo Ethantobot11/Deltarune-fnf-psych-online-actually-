@@ -312,12 +312,6 @@ class ClientPrefs {
 		//away3d.debug.Debug.active = ClientPrefs.isDebug();
 	}
 
-	public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
-		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
-		var daGameplaySetting:Dynamic = GameClient.isConnected() ? GameClient.getGameplaySetting(name) : data.gameplaySettings.get(name);
-		if (PlayState.replayData?.gameplay_modifiers != null) {
-			daGameplaySetting = PlayState.replayData?.gameplay_modifiers?.get(name);
-		}
 		return /*PlayState.isStoryMode ? defaultValue : */ (daGameplaySetting != null ? daGameplaySetting : defaultValue);
 	}
 
@@ -438,4 +432,12 @@ class ClientPrefs {
 		else
 			return PlayState.instance?.opponentPlayer?.noteSkin ?? defaultData.noteSkin;
 	}
+
+	public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
+		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
+		var daGameplaySetting:Dynamic = GameClient.isConnected() ? GameClient.getGameplaySetting(name) : data.gameplaySettings.get(name);
+		if (PlayState.replayData?.gameplay_modifiers != null) {
+			daGameplaySetting = PlayState.replayData?.gameplay_modifiers?.get(name);
+		}
+
 }
