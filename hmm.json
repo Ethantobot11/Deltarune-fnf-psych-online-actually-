@@ -25,7 +25,7 @@
       "type": "git",
       "dir": null,
       "ref": null,
-      "url": "https://github.com/kittycathy233/lime"
+      "url": "https://github.com/th2l-devs/lime"
     },
     {
       "name": "openfl",
@@ -63,8 +63,10 @@
     },
     {
       "name": "hxcpp",
-      "type": "haxelib",
-      "version": "4.3.2"
+      "type": "git",
+      "dir": null,
+      "ref": null,
+      "url": "https://github.com/th2l-devs/hxcpp"
     },
     {
       "name": "hxcpp",
