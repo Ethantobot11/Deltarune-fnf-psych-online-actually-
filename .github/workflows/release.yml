@@ -6,7 +6,7 @@ permissions:
   discussions: write
 
 env:
-  PROJECT_NAME: PsychOnline
+  PROJECT_NAME: PsychEngine
 
 jobs:
   build:
