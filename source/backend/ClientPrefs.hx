@@ -312,9 +312,6 @@ class ClientPrefs {
 		//away3d.debug.Debug.active = ClientPrefs.isDebug();
 	}
 
-		return /*PlayState.isStoryMode ? defaultValue : */ (daGameplaySetting != null ? daGameplaySetting : defaultValue);
-	}
-
 	public static function reloadVolumeKeys() {
 		TitleState.muteKeys = keyBinds.get('volume_mute').copy();
 		TitleState.volumeDownKeys = keyBinds.get('volume_down').copy();
@@ -438,6 +435,7 @@ class ClientPrefs {
 		var daGameplaySetting:Dynamic = GameClient.isConnected() ? GameClient.getGameplaySetting(name) : data.gameplaySettings.get(name);
 		if (PlayState.replayData?.gameplay_modifiers != null) {
 			daGameplaySetting = PlayState.replayData?.gameplay_modifiers?.get(name);
-		}
+
+		return /*PlayState.isStoryMode ? defaultValue : */ (daGameplaySetting != null ? daGameplaySetting : defaultValue);
 
 }
