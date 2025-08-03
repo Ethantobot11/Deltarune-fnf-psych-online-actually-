@@ -11,7 +11,7 @@ import flixel.input.gamepad.FlxGamepadInputID;
 import states.TitleState;
 
 // Add a variable here and it will get automatically saved
-class SaveVariables {
+@:structInit class SaveVariables {
 	// Mobile and Mobile Controls Releated
 	public var extraHints:String = "NONE"; // mobile extra hint option
 	public var hitboxPos:Bool = true; // hitbox extra hint position option
@@ -312,7 +312,7 @@ class ClientPrefs {
 		//away3d.debug.Debug.active = ClientPrefs.isDebug();
 	}
 
-		inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
+	   inline public static function getGameplaySetting(name:String, defaultValue:Dynamic = null, ?customDefaultValue:Bool = false):Dynamic {
 		if(!customDefaultValue) defaultValue = defaultData.gameplaySettings.get(name);
 		var daGameplaySetting:Dynamic = GameClient.isConnected() && !GameClient.room.state.permitModifiers ? 
          GameClient.getGameplaySetting(name) : data.gameplaySettings.get(name);
