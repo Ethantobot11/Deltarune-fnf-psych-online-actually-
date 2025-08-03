@@ -3,6 +3,7 @@ package backend;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxState;
+import flixel.utils.FlxDestroyUtil
 
 class MusicBeatState extends FlxUIState
 {
