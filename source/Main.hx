@@ -16,9 +16,6 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
 import states.TitleState;
-#if mobile
-import mobile.backend.MobileScaleMode;
-#end
 
 #if linux
 import lime.graphics.Image;
@@ -206,10 +203,6 @@ class Main extends Sprite
 		DiscordClient.initialize();
 		#end
 		
-		#if mobile
-		lime.system.System.allowScreenTimeout = ClientPrefs.data.screensaver; 		
-		FlxG.scaleMode = new MobileScaleMode();
-		#end
 			
 		// shader coords fix
 		FlxG.signals.gameResized.add(function (w, h) {
