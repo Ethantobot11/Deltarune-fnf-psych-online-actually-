@@ -22,14 +22,6 @@ import flxanimate.FlxAnimate;
 import lumod.Lumod;
 #end
 
-  // Mobile Controls
-import mobile.objects.Hitbox;
-import mobile.objects.TouchPad;
-import mobile.objects.TouchButton;
-import mobile.input.MobileInputID;
-import mobile.backend.MobileData;
-import mobile.input.MobileInputManager;
-import mobile.backend.TouchUtil;
 
 import backend.Paths;
 import backend.Controls;
