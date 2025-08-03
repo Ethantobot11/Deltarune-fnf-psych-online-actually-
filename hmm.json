@@ -47,7 +47,7 @@
     {
       "name": "flixel",
       "type": "git",
-      "dir" null,
+      "dir": null,
       "ref": null,
       "url": "https://github.com/kittycathy233/flixel"
     },
