@@ -223,7 +223,7 @@ public static var mobileBinds:Map<String, Array<MobileInputID>> = [
                 var mobileBind:Array<MobileInputID> = mobileBinds.get(key);
 		while(keyBind != null && keyBind.contains(NONE)) keyBind.remove(NONE);
 		while(gamepadBind != null && gamepadBind.contains(NONE)) gamepadBind.remove(NONE);
-		while(mobileBind != null && mobileBind.contains(NONE)) mobileBind.remove(NONE)
+		while(mobileBind != null && mobileBind.contains(NONE)) mobileBind.remove(NONE);
 	}
 
 	public static function loadDefaultKeys() {
