@@ -3,7 +3,15 @@
 	<!-- _________________________ Application Settings _________________________ -->
 
 	<!-- Shared Base -->
-        <app title="Psych Online" file="PsychEngine" main="Main" version="0.6.0" package="snirozu.psychonline" company="Snirozu" />
+        <app title="Psych Online"
+             file="PsychEngine"
+             main="Main"
+             version="0.6.0"
+             package="snirozu.psychonline"
+             company="Snirozu" />
+
+  <!-- Other necessary dependencies and defines --
+
 
 	
 	<!--Switch Export with Unique ApplicationID and Icon-->
