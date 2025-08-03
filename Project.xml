@@ -45,7 +45,7 @@
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true"
-		require-shaders="true" allow-high-dpi="true" />>
+		require-shaders="true" allow-high-dpi="true" />
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0"
@@ -101,8 +101,7 @@
 	<section if="MODS_ALLOWED">
 		<assets path='example_mods' rename='mods' embed='false' />
 	</section>
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<assets path='art/run-server.bat' rename='run-server.bat' if="windows" />
+	<assets path='art/readme.txt' rename='do NOT readme.txt' unless="mobile" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
