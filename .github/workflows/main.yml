@@ -54,10 +54,8 @@ jobs:
             sudo apt-get install libvlccore-dev
             haxelib setup ~/haxelib
             haxelib install lime --quiet
-            haxelib run lime setup --quiet
             haxelib install openfl --quiet
             haxelib install flixel --quiet
-            haxelib run lime setup flixel --quiet
             haxelib install flixel-tools --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
@@ -103,10 +101,8 @@ jobs:
           run: |
             haxelib setup ~/haxelib
             haxelib install lime --quiet
-            haxelib run lime setup --quiet
             haxelib install openfl --quiet
             haxelib install flixel --quiet
-            haxelib run lime setup flixel --quiet
             haxelib install flixel-tools --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
