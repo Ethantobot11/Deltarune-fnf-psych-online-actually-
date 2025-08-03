@@ -53,10 +53,13 @@ jobs:
             sudo apt-get install libvlc-dev
             sudo apt-get install libvlccore-dev
             haxelib setup ~/haxelib
-            haxelib install flixel-addons --quiet
             haxelib install lime --quiet
+            haxelib run lime setup --quiet
             haxelib install openfl --quiet
             haxelib install flixel --quiet
+            haxelib run lime setup flixel --quiet
+            haxelib install flixel-tools --quiet
+            haxelib run flixel-tools setup --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
             haxelib install hmm --quiet
@@ -68,14 +71,6 @@ jobs:
 
        - name: Create Version Tag
          run: echo "${{github.run_id}}" > VERSION
-       - name: setup flixel
-         run: haxelib run lime setup flixel --quiet
-       - name: lime setup
-         run: haxelib run lime setup --quiet
-       - name: flixel tools setup bruh
-         run:  |
-             haxelib install flixel-tools --quiet
-             haxelib run flixel-tools setup --quiet
        - name: clean android
          run: haxelib run lime clean Project.xml -clean android
        - name: Compile
@@ -90,7 +85,7 @@ jobs:
      runs-on: macos-latest
 
      steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     # Checks-o your repository under $GITHUB_WORKSPACE, so your job can access it
         - uses: actions/checkout@v2
 
         - name: Retrieve Cache
@@ -108,24 +103,19 @@ jobs:
         - name: Install Haxelib
           run: |
             haxelib setup ~/haxelib
-            haxelib install flixel-addons --quiet
             haxelib install lime --quiet
+            haxelib run lime setup --quiet
             haxelib install openfl --quiet
             haxelib install flixel --quiet
+            haxelib run lime setup flixel --quiet
+            haxelib install flixel-tools --quiet
+            haxelib run flixel-tools setup --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
             haxelib install hmm --quiet
             haxelib run hmm install --quiet
         - name: Create Version Tag
           run: echo "${{github.run_id}}" > VERSION
-        - name: setup flixel
-          run: haxelib run lime setup flixel --quiet
-        - name: lime setup
-          run: haxelib run lime setup --quiet
-        - name: flixel tools setup bruh
-          run: |
-             haxelib install flixel-tools --quiet
-             haxelib run flixel-tools setup --quiet
         - name: clean iOS
           run: haxelib run lime clean ios -clean
         - name: hxcpp rebuild ig
