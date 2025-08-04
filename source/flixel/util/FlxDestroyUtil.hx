@@ -1,4 +1,4 @@
-package flixel.utils;
+package flixel.util;
 
 import openfl.display.BitmapData;
 import openfl.display.DisplayObject;
