@@ -27,7 +27,12 @@ import lime.graphics.Image;
 import backend.io.PsychFileSystem as FileSystem;
 
 //crash handler stuff
+import openfl.events.UncaughtErrorEvent;
 import haxe.io.Path;
+import haxe.CallStack;
+import haxe.io.Path;
+import sys.io.File;
+import sys.io.Process
 
 class Main extends Sprite
 {
