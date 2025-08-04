@@ -14,13 +14,6 @@
     },
     {
       "name": "openfl",
-      "type": "git",
-      "dir": null,
-      "ref": null,
-      "url": "https://github.com/openfl/openfl"
-    },
-    {
-      "name": "openfl",
       "type": "haxelib",
       "version": "9.3.3"
     },
