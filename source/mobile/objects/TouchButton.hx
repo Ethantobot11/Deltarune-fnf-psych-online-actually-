@@ -9,7 +9,7 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.input.mouse.FlxMouseButton;
 #end
 import shaders.flixel.system.FlxShader;
-
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A simple button class that calls a function when clicked by the touch.
