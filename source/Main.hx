@@ -83,8 +83,6 @@ class Main extends Sprite
 			Sys.exit(1);
 		}
 		#end
-			}
-			#end
 		
 		Lib.current.addChild(view3D = new online.away.View3DHandler());
 		Lib.current.addChild(new Main());
