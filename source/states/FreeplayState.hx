@@ -877,6 +877,15 @@ class FreeplayState extends MusicBeatState
 					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
+									}
+					ClientPrefs.saveSettings();
+					search();
+				}
+				if (controls.UI_DOWN_P)
+				{
+					changeSelection(shiftMult);
+					holdTime = 0;
+				}
 
 				if ((touchPad.buttonF.justPressed || controls.FAV) && curSelected != -1) {
 					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
@@ -915,15 +924,6 @@ class FreeplayState extends MusicBeatState
 							var explood = explods.recycle(Explod);
 							explood.boom(cast grpSongs.members[curSelected], i);
 						}
-					}
-					ClientPrefs.saveSettings();
-					search();
-				}
-				if (controls.UI_DOWN_P)
-				{
-					changeSelection(shiftMult);
-					holdTime = 0;
-				}
 
 				if (controls.FAV && curSelected != -1) {
 					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
@@ -1100,6 +1100,23 @@ class FreeplayState extends MusicBeatState
 								var icon = new HealthIcon(iconName, false);
 								icon.sprTracker = leText;
 								icon.scrollFactor.set(1, 1);
+						daCopy[i] = formatGroupItem(item);
+
+					touchPad.visible = false;
+					var selState = new online.substates.SoFunkinSubstate(daCopy, searchGroupValue, i -> {
+						searchGroupValue = i;
+						search();
+						updateGroupTitle();
+						return true;
+					}, (i, leText) -> {
+						if (searchGroup == MIX) {
+							Mods.currentModDirectory = charsWeeksLoaded.get(searchGroupVList[i]);
+							var charaData:CharacterFile = Character.getCharacterFile(searchGroupVList[i]);
+							var iconName = charaData?.healthicon;
+							if (iconName != null) {
+								var icon = new HealthIcon(iconName, false);
+								icon.sprTracker = leText;
+								icon.scrollFactor.set(1, 1);
 								Mods.loadTopMod();
 								return icon;
 							}
@@ -1121,7 +1138,7 @@ class FreeplayState extends MusicBeatState
 					};
 					openSubState(selState);
 				}
-		        }
+			}
 
 			if (controls.BACK)
 			{
@@ -1293,6 +1310,76 @@ class FreeplayState extends MusicBeatState
 
 					if (selectedItem == 4) {
 						selectedScore = 0;
+								missingTextBG.visible = true;
+								FlxG.sound.play(Paths.sound('cancelMenu'));
+
+								updateTexts(elapsed);
+							}
+						}
+						else {
+							enterSong();
+						}
+					case 1:
+						if (!GameClient.isConnected()) {
+							persistentUpdate = false;
+							_substateIsModifiers = true;
+							openSubState(new GameplayChangersSubstate());
+						}
+					case 2:
+						#if !mobile
+						if (!GameClient.isConnected()) {
+							if (!FileSystem.exists("replays/"))
+								FileSystem.createDirectory("replays/");
+
+							var fileDialog = new FileDialog();
+							fileDialog.onOpen.add(res -> {
+								playReplay(cast(res, Bytes).toString());
+							});
+							fileDialog.open('funkinreplay', online.util.FileUtils.joinNativePath([Sys.getCwd(), "replays", "_"]), "Load Replay File");
+						}
+						#end
+					case 3:
+						persistentUpdate = false;
+						openSubState(new ResetScoreSubState(getSongName(), curDifficulty, songs[curSelected].songCharacter));
+						FlxG.sound.play(Paths.sound('scrollMenu'));
+					case 4:
+						if (!GameClient.isConnected()) {
+							if (top[selectedScore] != null)
+								playReplay(Leaderboard.fetchReplay(top[selectedScore].id), top[selectedScore].id);
+						}
+				}
+			}
+
+			if (controls.UI_UP_P) {
+				if (selectedItem == 4 && selectedScore != 0) {
+					selectedScore--;
+				}
+				else {
+					selectedItem--;
+
+					if (selectedItem < 0) {
+						selectedItem = 4;
+						selectedScore = 14;
+					}
+				}
+
+				topShit.selectRow(selectedItem != 4 ? -1 : selectedScore);
+				updateSelectSelection();
+
+				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+			}
+			else if (controls.UI_DOWN_P) {
+				if (selectedItem == 4 && selectedScore != 14) {
+					selectedScore++;
+				}
+				else {
+					selectedItem++;
+
+					if (selectedItem > 4)
+						selectedItem = 0;
+
+					if (selectedItem == 4) {
+						selectedScore = 0;
 					}
 				}
 
@@ -1333,7 +1420,7 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 		}
-
+				
 		updateTexts(elapsed);
 		if (FlxG.keys.pressed.SHIFT && !selected) {
 			itemsCameraZoom = FlxMath.lerp(itemsCameraZoom, 0.65, elapsed * 10);
