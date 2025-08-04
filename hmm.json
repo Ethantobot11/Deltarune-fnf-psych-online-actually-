@@ -1,16 +1,6 @@
 {
   "dependencies": [
     {
-      "name": "hxp",
-      "type": "haxelib",
-      "version": "1.3.0"
-    },
-    {
-      "name": "format",
-      "type": "haxelib",
-      "version": "3.8.0"
-    },
-    {
       "name": "hscript",
       "type": "haxelib",
       "version": "2.6.0"
@@ -19,25 +9,22 @@
       "name": "lime",
       "type": "git",
       "dir": null,
-      "ref": "main",
+      "ref": null,
       "url": "https://github.com/th2l-devs/lime"
-    },
-    {
-      "name": "lime",
-      "type": "haxelib",
-      "version": "8.1.3"
     },
     {
       "name": "openfl",
       "type": "git",
       "dir": null,
-      "ref": "develop",
+      "ref": null,
       "url": "https://github.com/th2l-devs/openfl"
     },
     {
       "name": "flixel",
-      "type": "haxelib",
-      "version": "5.8.0"
+      "type": "git",
+      "dir": null,
+      "ref": null,
+      "url": "https://github.com/HomuHomu833/flixel"
     },
     {
       "name": "flixel-addons",
@@ -56,8 +43,10 @@
     },
     {
       "name": "hxcpp",
-      "type": "haxelib",
-      "version": "4.3.2"
+      "type": "git",
+      "dir": null,
+      "ref": null,
+      "url": "https://github.com/th2l-devs/hxcpp"
     },
     {
       "name": "tjson",
@@ -68,19 +57,19 @@
       "name": "SScript",
       "type": "git",
       "dir": null,
-      "ref": "main",
+      "ref": null,
       "url": "https://github.com/th2l-devs/SScript"
     },
     {
       "name": "hxdiscord_rpc",
       "type": "haxelib",
-      "version": "1.3.0"
+      "version": null
     },
     {
       "name": "linc_luajit",
       "type": "git",
       "dir": null,
-      "ref": "master",
+      "ref": null,
       "url": "https://github.com/th2l-devs/linc_luajit"
     },
     {
@@ -143,6 +132,13 @@
       "version": "2.8.0"
     },
     {
+      "name": "funkin.vis",
+      "type": "git",
+      "dir": null,
+      "ref": "1966f8fbbbc509ed90d4b520f3c49c084fc92fd6",
+      "url": "https://github.com/FunkinCrew/funkVis"
+    },
+    {
       "name": "grig.audio",
       "type": "git",
       "dir": null,
@@ -155,28 +151,16 @@
       "version": "2.1.1"
     },
     {
-      "name": "hxvlc",
-      "type": "haxelib",
-      "version": "2.0.1"
-    },
-    {
-      "name": "hxvlc",
-      "type": "git",
-      "dir": null,
-      "ref": "main",
-      "url": "https://github.com/th2l-devs/hxvlc"
-    },
-    {
       "name": "yagp",
       "type": "haxelib",
       "version": "1.1.4"
     },
     {
-      "name": "funkin.vis",
+      "name": "hxvlc",
       "type": "git",
       "dir": null,
-      "ref": "1966f8fbbbc509ed90d4b520f3c49c084fc92fd6",
-      "url": "https://github.com/FunkinCrew/funkVis"
+      "ref": null,
+      "url": "https://github.com/th2l-devs/hxvlc"
     }
   ]
 }
