@@ -694,7 +694,7 @@ class FreeplayState extends MusicBeatState
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
 					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
-						var charToCheck:String = file.substr(0, file.length - 5);
+						var charToCheck:String = file.substr(0, file.length - 5);,
 						if (!charsWeeksLoaded.exists(charToCheck)) {
 							charsWeeksLoaded.set(charToCheck, directoryMods[i]);
 
@@ -1184,7 +1184,6 @@ class FreeplayState extends MusicBeatState
 			if (chatBox == null && touchPad.buttonY.justPressed || FlxG.keys.justPressed.TAB) {
 				persistentUpdate = false;
 				FlxG.switchState(() -> new online.states.SkinsState());
-			}
 		}
 		else {
 			if (controls.BACK || songs[curSelected] == null) {
