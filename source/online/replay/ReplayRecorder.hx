@@ -1,6 +1,7 @@
 package online.replay;
 
 import states.FreeplayState;
+import mobile.input.MobileInputID;
 import flixel.input.gamepad.FlxGamepad;
 import online.network.Leaderboard;
 import haxe.crypto.Md5;
