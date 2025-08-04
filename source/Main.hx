@@ -32,7 +32,7 @@ import haxe.io.Path;
 import haxe.CallStack;
 import haxe.io.Path;
 import sys.io.File;
-import sys.io.Process
+import sys.io.Process;
 
 class Main extends Sprite
 {
