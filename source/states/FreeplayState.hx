@@ -126,7 +126,7 @@ class FreeplayState extends MusicBeatState
 	// var dShots:FlxTypedGroup<FlxEffectSprite> = new FlxTypedGroup<FlxEffectSprite>();
 	var diffSelect:Alphabet = new Alphabet(0, 0, "< ? >", true);
 	var modifiersSelect:Alphabet = new Alphabet(0, 0, !GameClient.isConnected() ? "GAMEPLAY MODIFIERS" : "MODIFIERS UNAVAILABLE HERE", true);
-	var replaysSelect:Alphabet = new Alphabet(0, 0, !GameClient.isConnected() ? "LOAD REPLAY" : "REPLAYS UNAVAILABLE", true);
+	var replaysSelect:Alphabet = new Alphabet(0, 0, #if mobile "REPLAYS UNAVAILABLE" #else !GameClient.isConnected() ? "LOAD REPLAY" : "REPLAYS UNAVAILABLE" #end, true);
 	var resetSelect:Alphabet = new Alphabet(0, 0, "RESET SCORE", true);
 
 	var topTitle:Alphabet = new Alphabet(0, 0, "LEADERBOARD", true);
@@ -359,7 +359,8 @@ class FreeplayState extends MusicBeatState
 		scoreBG.scrollFactor.set();
 		scoreBG.cameras = [hudCamera];
 
-		searchInput = new FlxText(scoreText.x, scoreText.y + 36, 0, "PRESS F TO SEARCH", 24);
+		buttonS = (controls.mobileC) ? "S" : "F";
+		searchInput = new FlxText(scoreText.x, scoreText.y + 36, 0, "PRESS " + buttonS + " TO SEARCH", 24);
 		searchInput.font = scoreText.font;
 		searchInput.scrollFactor.set();
 
@@ -1112,6 +1113,7 @@ class FreeplayState extends MusicBeatState
 							openSubState(new GameplayChangersSubstate());
 						}
 					case 2:
+						#if !mobile
 						if (!GameClient.isConnected()) {
 							if (!FileSystem.exists("replays/"))
 								FileSystem.createDirectory("replays/");
@@ -1122,6 +1124,7 @@ class FreeplayState extends MusicBeatState
 							});
 							fileDialog.open('funkinreplay', online.util.FileUtils.joinNativePath([Sys.getCwd(), "replays", "_"]), "Load Replay File");
 						}
+						#end
 					case 3:
 						persistentUpdate = false;
 						openSubState(new ResetScoreSubState(getSongName(), curDifficulty, songs[curSelected].songCharacter));
@@ -1368,6 +1371,13 @@ class FreeplayState extends MusicBeatState
 
 		itemsCamera.targetOffset.set(0, 0);
 
+		final accept:String = (controls.mobileC) ? 'A' : 'ACCEPT';
+		final back:String = (controls.mobileC) ? 'B' : 'BACK';
+		final space:String = (controls.mobileC) ? 'X' : 'SPACE';
+		final tab:String = (controls.mobileC) ? 'Y' : 'TAB';
+		final reset:String = (controls.mobileC) ? 'R' : 'RESET';
+		final keys:String = (controls.mobileC) ? 'Buttons' : 'Keys';
+
 		if (curSelected == -1) {
 			infoText.text = "ACCEPT to select a random song / SPACE to select without loading / CTRL to select song group";
 			if (chatBox == null)
@@ -1459,9 +1469,11 @@ class FreeplayState extends MusicBeatState
 			infoText.text += " / BACK to return to Songs";
 
 		if (GameClient.isConnected()) {
-			replaysSelect.alpha -= 0.4;
+			#if !mobile replaysSelect.alpha -= 0.4; #end
 			modifiersSelect.alpha -= 0.4;
-		}
+		} #if mobile else
+			replaysSelect.alpha -= 0.4;
+		#end
 	}
 
 	function listenToSong() {
