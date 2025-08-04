@@ -63,13 +63,6 @@
     },
     {
       "name": "hxcpp",
-      "type": "git",
-      "dir": null,
-      "ref": "main",
-      "url": "https://github.com/th2l-devs/hxcpp"
-    },
-    {
-      "name": "hxcpp",
       "type": "haxelib",
       "version": "4.3.2"
     },
