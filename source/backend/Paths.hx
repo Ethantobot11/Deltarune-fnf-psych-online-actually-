@@ -21,8 +21,8 @@ import lime.utils.Assets;
 import openfl.media.Sound;
 
 #if sys
-import sys.io.File;
-import sys.FileSystem;
+import backend.io.PsychFile as File;
+import backend.io.PsychFileSystem as FileSystem;
 #end
 import tjson.TJSON as Json;
 
