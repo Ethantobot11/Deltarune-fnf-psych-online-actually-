@@ -47,8 +47,9 @@ class Paths
 		'assets/music/freakyMenu.$SOUND_EXT',
 		'assets/shared/music/breakfast.$SOUND_EXT',
 		'assets/shared/music/tea-time.$SOUND_EXT',
-		'assets/images/bf1.png',
-		'assets/images/bf2.png',
+		'assets/images/bf1.astc',
+		'assets/images/bf2.astc',
+		'assets/mobile/touchpad/bg.astc'
 	];
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory() {
@@ -118,6 +119,9 @@ class Paths
 			if(FileSystem.exists(modded)) return modded;
 		}
 		#end
+		
+		if (library == "mobile")
+			return getPreloadPath('mobile/$file');
 
 		if (library != null)
 			return getLibraryPath(file, library);
@@ -439,6 +443,31 @@ class Paths
 		// trace(gottenPath);
 		try {
 			if(!currentTrackedSounds.exists(gottenPath))
+			{
+				var sound:Sound = null;
+				final fullPath:String = #if !mobile './' + #end gottenPath;
+
+				if (sys.FileSystem.exists(fullPath))
+					sound = Sound.fromFile(fullPath);
+				else
+				{
+					var folder:String = '';
+					if(path == 'songs') folder = 'songs:';
+					sound = OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library));
+				}
+
+				currentTrackedSounds.set(gottenPath, sound);
+			}
+		} catch (e:Dynamic) {
+			if (ClientPrefs.isDebug())
+				Sys.println('Paths.returnSound(): SOUND NOT FOUND: $key');
+			return null;
+		}
+		localTrackedAssets.push(gottenPath);
+		return currentTrackedSounds.get(gottenPath);
+	}
+	
+			if(!currentTrackedSounds.exists(gottenPath))
 			#if MODS_ALLOWED
 				currentTrackedSounds.set(gottenPath, Sound.fromFile(#if !mobile './' + #end gottenPath));
 			#else
@@ -460,7 +489,7 @@ class Paths
 
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '') {
-		return 'mods/' + key;
+		return #if mobile Sys.getCwd() + #end 'mods/' + key;
 	}
 
 	inline static public function modsFont(key:String) {
