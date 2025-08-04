@@ -9,7 +9,6 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.input.mouse.FlxMouseButton;
 #end
 import shaders.flixel.system.FlxShader;
-import flixel.utils.FlxDestroyUtil;
 
 
 /**
