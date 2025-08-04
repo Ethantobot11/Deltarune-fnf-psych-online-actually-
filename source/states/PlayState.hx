@@ -500,7 +500,7 @@ class PlayState extends MusicBeatState
 
 	var noteUnderlays:FlxTypedGroup<FlxSprite>;
 
-	public var luaTouchPad:TouchPad
+	public var luaTouchPad:TouchPad;
 
 	public var playOtherSide:Bool = false;
 
