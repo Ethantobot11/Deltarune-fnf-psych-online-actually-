@@ -551,7 +551,7 @@ class ModsMenuState extends MusicBeatState
 
 		var path:String = #if mobile Sys.getCwd() + #end 'modsList.txt';
 		File.saveContent(path, fileStr);
-		Mods.pushGlobalMods()
+		Mods.pushGlobalMods();
 	}
 
 	function toggleGlobal() {
