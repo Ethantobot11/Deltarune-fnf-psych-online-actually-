@@ -73,8 +73,8 @@ import openfl.filters.ShaderFilter;
 #end
 
 #if sys
-import sys.FileSystem;
-import sys.io.File;
+import backend.io.PsychFileSystem as FileSystem;
+import backend.io.PsychFile as File;
 #end
 
 #if VIDEOS_ALLOWED 
@@ -1253,7 +1253,7 @@ class PlayState extends MusicBeatState
 
 		if (GameClient.isConnected()) {
 			preloadTasks.push(() -> {
-				waitReadySpr = new Alphabet(0, 0, "PRESS ACCEPT TO START", true);
+				waitReadySpr = new Alphabet(0, 0, controls.mobileC ? "TOUCH YOUR SCREEN TO START" : "PRESS ACCEPT TO START",
 				waitReadySpr.cameras = [camOther];
 				waitReadySpr.alignment = CENTERED;
 				waitReadySpr.x = FlxG.width / 2;
@@ -1926,7 +1926,27 @@ class PlayState extends MusicBeatState
 			setOnScripts('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
 			// if(ClientPrefs.data.middleScroll) opponentStrums.members[i].visible = false;
 		}
+		
+		addHitbox();
+		addTouchPad((replayData != null || cpuControlled) ? 'LEFT_RIGHT' : 'NONE', (GameClient.isConnected()) ? 'P_C_T' : (replayData != null || cpuControlled) ? #if android 'X_Y' : 'T' #else 'P_X_Y' : 'P_T' #end);
+		addTouchPadCamera();
+		hitbox.onButtonDown.add(onButtonPress);
+		hitbox.onButtonUp.add(onButtonRelease);
+		if (replayData == null && !cpuControlled)
+			hitbox.visible = true;
+		hitbox.forEachAlive((button) ->
+		{
+			if (touchPad.buttonT != null)
+    				button.deadZones.push(touchPad.buttonT);
+			if (touchPad.buttonC != null)
+    				button.deadZones.push(touchPad.buttonC);
+			if (touchPad.buttonP != null)			
+					button.deadZones.push(touchPad.buttonP);
+		});
+		if (replayRecorder != null)
+			replayRecorder.setupMobileCRecorder();
 	}
+	
 
 	public function startCountdown()
 	{
@@ -2885,7 +2905,7 @@ class PlayState extends MusicBeatState
 			// 	endSong();
 			// }
 
-			if (!isReady && controls.ACCEPT && !inCutscene && canStart && canInput()) {
+			if (canStart && !isReady && (controls.mobileC && FlxG.mouse.justPressed || controls.ACCEPT) && canInput()) {
 				isReady = true;
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.5);
 				if (ClientPrefs.data.flashing)
