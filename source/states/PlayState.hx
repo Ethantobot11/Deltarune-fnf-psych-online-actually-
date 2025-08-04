@@ -6308,6 +6308,7 @@ class PlayState extends MusicBeatState
 	function set_scrollYCenter(value) {
 		return camGame.scroll.y = value - FlxG.height / 2;
 	}
+}
 
 @:publicFields
 class PlayStatePlayer {
