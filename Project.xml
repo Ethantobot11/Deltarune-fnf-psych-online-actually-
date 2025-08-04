@@ -147,7 +147,6 @@
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 
         <!-- dunno what's that's for?-->
-	<haxedef name="HXCPP_STD" value="libc++" />
 		
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
