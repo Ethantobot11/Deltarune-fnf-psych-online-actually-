@@ -146,6 +146,10 @@
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="hxdiscord_rpc" />
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 
+        <!-- dunno what's that's for?-->
+	<haxedef name="HXCPP_STD" value="libc++" />
+		
+
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Enable the Flixel core recording system-->
