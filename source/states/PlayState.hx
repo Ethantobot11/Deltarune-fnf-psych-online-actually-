@@ -500,6 +500,8 @@ class PlayState extends MusicBeatState
 
 	var noteUnderlays:FlxTypedGroup<FlxSprite>;
 
+	public var luaTouchPad:TouchPad
+
 	public var playOtherSide:Bool = false;
 
 	var nameplates:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
@@ -2865,7 +2867,7 @@ class PlayState extends MusicBeatState
 			// }
 
 			if (cpuControlled) {
-				var shiftMult = FlxG.keys.pressed.SHIFT ? 3 : 1;
+				var shiftMult = (touchPad.buttonX.pressed || FlxG.keys.pressed.SHIFT) ? 3 : 1;
 				if (controls.UI_LEFT) {
 					if (playbackRate - elapsed * 0.25 * shiftMult > 0)
 						playbackRate -= elapsed * 0.25 * shiftMult;
@@ -2881,12 +2883,13 @@ class PlayState extends MusicBeatState
 					}
 					botplayTxt.text = "BOTPLAY\n" + '(${CoolUtil.floorDecimal(playbackRate, 2)}x)';
 				}
-				else if (controls.RESET) {
+				else if (touchPad.buttonY.justPressed || controls.RESET) {
 					playbackRate = 1;
+					botplayTxt.text = "BOTPLAY";
 				}
 			}
 		}
-
+		
 		if (FlxG.keys.justPressed.F11 && GameClient.isConnected()) {
 			GameClient.reconnect(5); //delay the reconnection for 5 seconds (for testing)
 		}
@@ -3291,7 +3294,7 @@ class PlayState extends MusicBeatState
 
 	function pause() {
 		FlxG.camera.followLerp = 0;
-		persistentUpdate = false;
+		touchPad.visible = persistentUpdate = false;
 		persistentDraw = true;
 		paused = true;
 
@@ -3305,6 +3308,8 @@ class PlayState extends MusicBeatState
 	function resume() {
 		if (forcePause)
 			return;
+
+		touchPad.visible = true;
 
 		if (FlxG.sound.music != null && !startingSong) {
 			resyncVocals();
@@ -3941,6 +3946,7 @@ class PlayState extends MusicBeatState
 	public var transitioning = false;
 	public function endSong()
 	{
+		hitbox.visible = #if !android touchPad.visible = #end false;
 		if (redditMod) {
 			health = 0;
 			doDeathCheck();
@@ -6304,6 +6310,69 @@ class PlayState extends MusicBeatState
 	}
 
 	public function makeLuaTouchPad(DPadMode:String, ActionMode:String) {
+		if(members.contains(luaTouchPad)) return;
+
+		if(!variables.exists("luaTouchPad"))
+			variables.set("luaTouchPad", luaTouchPad);
+
+		luaTouchPad = new TouchPad(DPadMode, ActionMode);
+		luaTouchPad.alpha = ClientPrefs.data.controlsAlpha;
+	}
+	
+	public function addLuaTouchPad() {
+		if(luaTouchPad == null || members.contains(luaTouchPad)) return;
+
+		var target = LuaUtils.getTargetInstance();
+		target.insert(target.members.length + 1, luaTouchPad);
+	}
+
+	public function addLuaTouchPadCamera() {
+		if(luaTouchPad != null)
+			luaTouchPad.cameras = [luaTpadCam];
+	}
+
+	public function removeLuaTouchPad() {
+		if (luaTouchPad != null) {
+			luaTouchPad.kill();
+			luaTouchPad.destroy();
+			remove(luaTouchPad);
+			luaTouchPad = null;
+		}
+	}
+
+	public function luaTouchPadPressed(button:Dynamic):Bool {
+		if(luaTouchPad != null) {
+			if(Std.isOfType(button, String))
+				return luaTouchPad.buttonPressed(MobileInputID.fromString(button));
+			else if(Std.isOfType(button, Array)){
+				var FUCK:Array<String> = button; // haxe said "You Can't Iterate On A Dyanmic Value Please Specificy Iterator or Iterable *insert nerd emoji*" so that's the only i foud to fix
+				var idArray:Array<MobileInputID> = [];
+				for(strId in FUCK)
+					idArray.push(MobileInputID.fromString(strId));
+				return luaTouchPad.anyPressed(idArray);
+			} else
+				return false;
+		}
+		return false;
+	}
+
+	public function luaTouchPadJustPressed(button:Dynamic):Bool {
+		if(luaTouchPad != null) {
+			if(Std.isOfType(button, String))
+				return luaTouchPad.buttonJustPressed(MobileInputID.fromString(button));
+			else if(Std.isOfType(button, Array)){
+				var FUCK:Array<String> = button;
+				var idArray:Array<MobileInputID> = [];
+				for(strId in FUCK)
+					idArray.push(MobileInputID.fromString(strId));
+				return luaTouchPad.anyJustPressed(idArray);
+			} else
+				return false;
+		}
+		return false;
+	}
+	
+public function makeLuaTouchPad(DPadMode:String, ActionMode:String) {
 		if(members.contains(luaTouchPad)) return;
 
 		if(!variables.exists("luaTouchPad"))
