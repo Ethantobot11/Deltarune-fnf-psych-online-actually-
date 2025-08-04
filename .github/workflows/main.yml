@@ -55,7 +55,6 @@ jobs:
             haxelib install flixel-addons --quiet
             haxelib run lime setup --quiet
             haxelib install lime --quiet
-            haxelib install openfl --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
             haxelib install hmm --quiet
@@ -103,7 +102,6 @@ jobs:
             haxelib install flixel-addons --quiet
             haxelib run lime setup --quiet
             haxelib install lime --quiet
-            haxelib install openfl --quiet
             haxelib install format --quiet
             haxelib install hxcpp > /dev/null --quiet
             haxelib install hmm --quiet
