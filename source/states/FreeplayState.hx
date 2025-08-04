@@ -602,6 +602,9 @@ class FreeplayState extends MusicBeatState
 		updateTexts();
 		searchString = searchString;
 
+                addTouchPad('LEFT_FULL', (GameClient.isConnected()) ? 'FREEPLAY_ONLINE' : 'FREEPLAY');
+		addTouchPadCamera()
+
 		super.create();
 
 		CustomFadeTransition.nextCamera = hudCamera;
@@ -744,6 +747,9 @@ class FreeplayState extends MusicBeatState
 		}
 
 		super.closeSubState();
+		removeTouchPad();
+		addTouchPad('LEFT_FULL', (GameClient.isConnected()) ? 'FREEPLAY_ONLINE' : 'FREEPLAY');
+		addTouchPadCamera();
 	}
 
 	function setDiffVisibility(value:Bool) {
@@ -842,13 +848,14 @@ class FreeplayState extends MusicBeatState
 			return;
 		}
 
-		if (!searchInputWait && FlxG.keys.justPressed.F) {
+		if (!searchInputWait && (touchPad.buttonS.justPressed || FlxG.keys.justPressed.F)) {
+			FlxG.stage.window.textInputEnabled = true;
 			searchInputWait = true;
 			searchString = searchString;
 		}
 
 		var shiftMult:Int = 1;
-		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
+		if(touchPad.buttonZ.pressed || FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!selected) {
 			if(songs.length > 0)
@@ -869,6 +876,48 @@ class FreeplayState extends MusicBeatState
 				{
 					changeSelection(-shiftMult);
 					holdTime = 0;
+				}
+
+				if ((touchPad.buttonF.justPressed || controls.FAV) && curSelected != -1) {
+					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
+					if (ClientPrefs.data.favSongs.contains(songId)) {
+						ClientPrefs.data.favSongs.remove(songId);
+
+						unfavSound.volume = 1;
+						unfavSound.play(true);
+					}
+					else {
+						ClientPrefs.data.favSongs.push(songId);
+
+						favSound.volume = 1;
+						favSound.play(true);
+					}
+					ClientPrefs.saveSettings();
+					search();
+				}
+
+				if (((touchPad.buttonR.justReleased && resetTotalHeld <= 3.5) || controls.RESET) && curSelected != -1 && !FlxG.keys.pressed.ALT) {
+					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
+					if (ClientPrefs.data.hiddenSongs.contains(songId)) {
+						ClientPrefs.data.hiddenSongs.remove(songId);
+					}
+					else {
+						ClientPrefs.data.hiddenSongs.push(songId);
+						destroyFreeplayVocals();
+						playFreakyMusic();
+						FlxG.sound.music.fadeIn(bustSound.length / 1000 + 1, 0, 0.7);
+
+						bustSound.volume = 1;
+						bustSound.play(true);
+
+						var exploAmount:Int = Std.int((grpSongs.members[curSelected].width + grpIcons.members[curSelected].width) / 80) + 1;
+						for (i in 0...exploAmount) {
+							var explood = explods.recycle(Explod);
+							explood.boom(cast grpSongs.members[curSelected], i);
+						}
+					}
+					ClientPrefs.saveSettings();
+					search();
 				}
 				if (controls.UI_DOWN_P)
 				{
@@ -935,7 +984,16 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if (controls.RESET && FlxG.keys.pressed.ALT) {
+			if (touchPad.buttonR.pressed && resetTotalHeld <= 3.5)
+			{
+				resetTotalHeld += elapsed;
+				if (resetTotalHeld >= 3.5)
+					doSongReset = true;
+			} else if (touchPad.buttonR.released)
+				resetTotalHeld = 0;
+
+			if ((touchPad.buttonR.pressed && doSongReset) || (controls.RESET && FlxG.keys.pressed.ALT)) {
+				doSongReset = false;
 				ClientPrefs.data.hiddenSongs = [];
 				ClientPrefs.saveSettings();
 				search();
@@ -953,12 +1011,81 @@ class FreeplayState extends MusicBeatState
 					updateGroupTitle();
 				}
 
+				if (touchPad.buttonG.justPressed || FlxG.keys.justPressed.CONTROL) {
+					persistentUpdate = false;
+					var daCopy = searchGroupVList.copy();
+					for (i => item in daCopy)
+						daCopy[i] = formatGroupItem(item);
+
+					touchPad.visible = false;
+
 				if (FlxG.keys.justPressed.CONTROL) {
 					persistentUpdate = false;
 					var daCopy = searchGroupVList.copy();
 					for (i => item in daCopy)
 						daCopy[i] = formatGroupItem(item);
 					
+					var selState = new online.substates.SoFunkinSubstate(daCopy, searchGroupValue, i -> {
+						searchGroupValue = i;
+						search();
+						updateGroupTitle();
+						return true;
+					}, (i, leText) -> {
+						if (searchGroup == MIX) {
+							Mods.currentModDirectory = charsWeeksLoaded.get(searchGroupVList[i]);
+							var charaData:CharacterFile = Character.getCharacterFile(searchGroupVList[i]);
+							var iconName = charaData?.healthicon;
+							if (iconName != null) {
+								var icon = new HealthIcon(iconName, false);
+								icon.sprTracker = leText;
+								icon.scrollFactor.set(1, 1);
+								Mods.loadTopMod();
+								return icon;
+							}
+							Mods.loadTopMod();
+						}
+						return null;
+					});
+					selState.groups = FreeplayState.GROUPS;
+					selState.curGroup = FreeplayState.GROUPS.indexOf(ClientPrefs.data.groupSongsBy);
+					selState.groupCallback = i -> {
+						ClientPrefs.data.groupSongsBy = FreeplayState.GROUPS[i];
+						ClientPrefs.saveSettings();
+						updateGroups(true);
+			if (touchPad.buttonR.pressed && resetTotalHeld <= 3.5)
+			{
+				resetTotalHeld += elapsed;
+				if (resetTotalHeld >= 3.5)
+					doSongReset = true;
+			} else if (touchPad.buttonR.released)
+				resetTotalHeld = 0;
+
+			if ((touchPad.buttonR.pressed && doSongReset) || (controls.RESET && FlxG.keys.pressed.ALT)) {
+				doSongReset = false;
+				ClientPrefs.data.hiddenSongs = [];
+				ClientPrefs.saveSettings();
+				search();
+			}
+
+			if (searchGroupVList.length > 0) {
+				if (controls.UI_LEFT_P) {
+					searchGroupValue--;
+					search();
+					updateGroupTitle();
+				}
+				if (controls.UI_RIGHT_P) {
+					searchGroupValue++;
+					search();
+					updateGroupTitle();
+				}
+
+				if (touchPad.buttonG.justPressed || FlxG.keys.justPressed.CONTROL) {
+					persistentUpdate = false;
+					var daCopy = searchGroupVList.copy();
+					for (i => item in daCopy)
+						daCopy[i] = formatGroupItem(item);
+
+					touchPad.visible = false;
 					var selState = new online.substates.SoFunkinSubstate(daCopy, searchGroupValue, i -> {
 						searchGroupValue = i;
 						search();
@@ -994,7 +1121,7 @@ class FreeplayState extends MusicBeatState
 					};
 					openSubState(selState);
 				}
-			}
+		        }
 
 			if (controls.BACK)
 			{
@@ -1021,7 +1148,7 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if(FlxG.keys.justPressed.SPACE)
+			if(touchPad.buttonX.justPressed || FlxG.keys.justPressed.SPACE)
 			{
 				if (curSelected == -1) {
 					var newSel = FlxG.random.int(0, songs.length - 1);
@@ -1054,7 +1181,7 @@ class FreeplayState extends MusicBeatState
 				leaderboardTimer = 0;
 			}
 
-			if (chatBox == null && FlxG.keys.justPressed.TAB) {
+			if (chatBox == null && touchPad.buttonY.justPressed || FlxG.keys.justPressed.TAB) {
 				persistentUpdate = false;
 				FlxG.switchState(() -> new online.states.SkinsState());
 			}
