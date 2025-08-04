@@ -165,6 +165,34 @@ class ReplayRecorder extends FlxBasic {
 			data.inputs.push([time, id, move]);
 		}
 	}
+	function recordKeyMobileC(time:Float, IDs:Array<MobileInputID>, move:Int) {
+		if (IDs == null || IDs.length < 0)
+			return;
+
+		if(IDs.length == 1 && !REGISTER_BINDS.contains(IDs[0].toString().toLowerCase()))
+		{
+			switch(IDs[0])
+			{
+				case EXTRA_1:
+					data.inputs.push([time, 'KEY:SPACE', move]);
+				case EXTRA_2:
+					data.inputs.push([time, 'KEY:SHIFT', move]);
+				default:
+					// nothing
+			}
+			return;
+		}
+
+		for (id in IDs)
+		{
+			var idName:String = id.toString().toLowerCase();
+
+			if (idName == null || state.paused || !REGISTER_BINDS.contains(idName))
+				continue;
+
+			data.inputs.push([time, idName, move]);
+		}
+	}
 	
 	public function setupMobileCRecorder():Void {
 		var hitbox:Hitbox = state.controls.requestedHitbox;
