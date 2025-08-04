@@ -15,6 +15,9 @@ class FlashingState extends MusicBeatState
 	{
 		super.create();
 
+		final enter:String = (controls.mobileC) ? 'A' : 'ENTER';
+		final back:String = (controls.mobileC) ? 'B' : 'BACK';
+
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
