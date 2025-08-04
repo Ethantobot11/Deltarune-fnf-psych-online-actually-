@@ -603,7 +603,7 @@ class FreeplayState extends MusicBeatState
 		searchString = searchString;
 
                 addTouchPad('LEFT_FULL', (GameClient.isConnected()) ? 'FREEPLAY_ONLINE' : 'FREEPLAY');
-		addTouchPadCamera()
+		addTouchPadCamera();
 
 		super.create();
 
