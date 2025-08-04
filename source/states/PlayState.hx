@@ -6309,70 +6309,68 @@ class PlayState extends MusicBeatState
 		return camGame.scroll.y = value - FlxG.height / 2;
 	}
 
+@:publicFields
+class PlayStatePlayer {
+	public var player:Player;
+	public var ratingPercent: Float = 0.;
+	public var ratingName: String = '?';
+	public var ratingFC: String = null;
+	public var combo: Int = 0;
+
+	function calcHits() {
+		return player.sicks + player.goods + player.bads + player.shits;
+	}
+
+	// all the encountered notes
+	function calcTotalPlayed() {
+		return player.sicks + player.goods + player.bads + player.shits + player.misses;
+	}
+
+	function calcTotalNotesHit() {
+		return 
+			(player.sicks * PlayState.instance.ratingsData[0].ratingMod) + 
+			(player.goods * PlayState.instance.ratingsData[1].ratingMod) + 
+			(player.bads * PlayState.instance.ratingsData[2].ratingMod) +
+			(player.shits * PlayState.instance.ratingsData[3].ratingMod)
+		;
+	}
+
+	function recalculateRating() {
+		var totalPlayed = calcTotalPlayed();
+		var totalNotesHit = calcTotalNotesHit();
+		var ratingStuff = PlayState.ratingStuff;
+
+		if (totalPlayed != 0) // Prevent divide by 0 
+		{
+			// Rating Percent
+			ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
+
+			// Rating Name
+			ratingName = ratingStuff[ratingStuff.length - 1][0]; // Uses last string
+			if (ratingPercent < 1)
+				for (i in 0...ratingStuff.length - 1)
+					if (ratingPercent < ratingStuff[i][1]) {
+						ratingName = ratingStuff[i][0];
+						break;
+					}
+		}
+
+		ratingFC = 'Clear';
+		if (player.misses < 1) {
+			if (player.shits > 0) ratingFC = 'NM';
+			if (player.bads > 0) ratingFC = 'FC';
+			else if (player.goods > 0) ratingFC = 'GFC';
+			else if (player.sicks > 0) ratingFC = 'SFC';
+		}
+		else if (player.misses < 10)
+			ratingFC = 'SDCB';
+	}
+
+	function new(player:Player) {
+		this.player = player;
+	}
+
 	public function makeLuaTouchPad(DPadMode:String, ActionMode:String) {
-		if(members.contains(luaTouchPad)) return;
-
-		if(!variables.exists("luaTouchPad"))
-			variables.set("luaTouchPad", luaTouchPad);
-
-		luaTouchPad = new TouchPad(DPadMode, ActionMode);
-		luaTouchPad.alpha = ClientPrefs.data.controlsAlpha;
-	}
-	
-	public function addLuaTouchPad() {
-		if(luaTouchPad == null || members.contains(luaTouchPad)) return;
-
-		var target = LuaUtils.getTargetInstance();
-		target.insert(target.members.length + 1, luaTouchPad);
-	}
-
-	public function addLuaTouchPadCamera() {
-		if(luaTouchPad != null)
-			luaTouchPad.cameras = [luaTpadCam];
-	}
-
-	public function removeLuaTouchPad() {
-		if (luaTouchPad != null) {
-			luaTouchPad.kill();
-			luaTouchPad.destroy();
-			remove(luaTouchPad);
-			luaTouchPad = null;
-		}
-	}
-
-	public function luaTouchPadPressed(button:Dynamic):Bool {
-		if(luaTouchPad != null) {
-			if(Std.isOfType(button, String))
-				return luaTouchPad.buttonPressed(MobileInputID.fromString(button));
-			else if(Std.isOfType(button, Array)){
-				var FUCK:Array<String> = button; // haxe said "You Can't Iterate On A Dyanmic Value Please Specificy Iterator or Iterable *insert nerd emoji*" so that's the only i foud to fix
-				var idArray:Array<MobileInputID> = [];
-				for(strId in FUCK)
-					idArray.push(MobileInputID.fromString(strId));
-				return luaTouchPad.anyPressed(idArray);
-			} else
-				return false;
-		}
-		return false;
-	}
-
-	public function luaTouchPadJustPressed(button:Dynamic):Bool {
-		if(luaTouchPad != null) {
-			if(Std.isOfType(button, String))
-				return luaTouchPad.buttonJustPressed(MobileInputID.fromString(button));
-			else if(Std.isOfType(button, Array)){
-				var FUCK:Array<String> = button;
-				var idArray:Array<MobileInputID> = [];
-				for(strId in FUCK)
-					idArray.push(MobileInputID.fromString(strId));
-				return luaTouchPad.anyJustPressed(idArray);
-			} else
-				return false;
-		}
-		return false;
-	}
-	
-public function makeLuaTouchPad(DPadMode:String, ActionMode:String) {
 		if(members.contains(luaTouchPad)) return;
 
 		if(!variables.exists("luaTouchPad"))
@@ -6465,67 +6463,5 @@ public function makeLuaTouchPad(DPadMode:String, ActionMode:String) {
 				return false;
 		}
 		return false;
-	}
-}
-
-@:publicFields
-class PlayStatePlayer {
-	public var player:Player;
-	public var ratingPercent: Float = 0.;
-	public var ratingName: String = '?';
-	public var ratingFC: String = null;
-	public var combo: Int = 0;
-
-	function calcHits() {
-		return player.sicks + player.goods + player.bads + player.shits;
-	}
-
-	// all the encountered notes
-	function calcTotalPlayed() {
-		return player.sicks + player.goods + player.bads + player.shits + player.misses;
-	}
-
-	function calcTotalNotesHit() {
-		return 
-			(player.sicks * PlayState.instance.ratingsData[0].ratingMod) + 
-			(player.goods * PlayState.instance.ratingsData[1].ratingMod) + 
-			(player.bads * PlayState.instance.ratingsData[2].ratingMod) +
-			(player.shits * PlayState.instance.ratingsData[3].ratingMod)
-		;
-	}
-
-	function recalculateRating() {
-		var totalPlayed = calcTotalPlayed();
-		var totalNotesHit = calcTotalNotesHit();
-		var ratingStuff = PlayState.ratingStuff;
-
-		if (totalPlayed != 0) // Prevent divide by 0 
-		{
-			// Rating Percent
-			ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
-
-			// Rating Name
-			ratingName = ratingStuff[ratingStuff.length - 1][0]; // Uses last string
-			if (ratingPercent < 1)
-				for (i in 0...ratingStuff.length - 1)
-					if (ratingPercent < ratingStuff[i][1]) {
-						ratingName = ratingStuff[i][0];
-						break;
-					}
-		}
-
-		ratingFC = 'Clear';
-		if (player.misses < 1) {
-			if (player.shits > 0) ratingFC = 'NM';
-			if (player.bads > 0) ratingFC = 'FC';
-			else if (player.goods > 0) ratingFC = 'GFC';
-			else if (player.sicks > 0) ratingFC = 'SFC';
-		}
-		else if (player.misses < 10)
-			ratingFC = 'SDCB';
-	}
-
-	function new(player:Player) {
-		this.player = player;
 	}
 }
