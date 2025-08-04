@@ -52,7 +52,6 @@ jobs:
          run: |
             sudo apt-get install libvlc-dev
             sudo apt-get install libvlccore-dev
-            haxelib setup ~/haxelib
             haxelib install flixel-addons --quiet
             haxelib run lime setup --quiet
             haxelib install lime --quiet
@@ -99,7 +98,6 @@ jobs:
         # Runs a set of commands using the runners shell
         - name: Install Haxelib
           run: |
-            haxelib setup ~/haxelib
             haxelib install flixel-addons --quiet
             haxelib run lime setup --quiet
             haxelib install lime --quiet
