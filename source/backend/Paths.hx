@@ -437,6 +437,30 @@ class Paths
 			return currentTrackedSounds.get(file);
 		}
 		#end
+		// I hate this so god damn much
+		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
+		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		// trace(gottenPath);
+		try {
+			if(!currentTrackedSounds.exists(gottenPath))
+			#if MODS_ALLOWED
+				currentTrackedSounds.set(gottenPath, Sound.fromFile(#if !mobile './' + #end gottenPath));
+			#else
+			{
+				var folder:String = '';
+				if(path == 'songs') folder = 'songs:';
+		
+				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
+			}
+			#end
+		} catch (e:Dynamic) {
+			if (ClientPrefs.isDebug())
+				Sys.println('Paths.returnSound(): SOUND NOT FOUND: $key');
+			return null;
+		}
+		localTrackedAssets.push(gottenPath);
+		return currentTrackedSounds.get(gottenPath);
+}
 
 
 	#if MODS_ALLOWED
