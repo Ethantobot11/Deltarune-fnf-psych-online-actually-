@@ -467,7 +467,7 @@ class Paths
 		return currentTrackedSounds.get(gottenPath);
 	}
 	
-			if (!currentTrackedSounds.exists(gottenPath))
+			
 			#if MODS_ALLOWED
 				currentTrackedSounds.set(gottenPath, Sound.fromFile(#if !mobile './' + #end gottenPath));
 			#else
