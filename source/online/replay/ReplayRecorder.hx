@@ -6,9 +6,9 @@ import online.network.Leaderboard;
 import haxe.crypto.Md5;
 import backend.Song;
 import backend.Highscore;
-import sys.FileSystem;
+import backend.io.PsychFileSystem as FileSystem;
 import haxe.Json;
-import sys.io.File;
+import backend.io.PsychFile as File;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
@@ -163,6 +163,24 @@ class ReplayRecorder extends FlxBasic {
 				continue;
 			data.inputs.push([time, id, move]);
 		}
+	}
+	
+	public function setupMobileCRecorder():Void {
+		var hitbox:Hitbox = state.controls.requestedHitbox;
+		if (hitbox != null) {
+			hitbox.onButtonDown.add((button:TouchButton, ids:Array<MobileInputID>) -> recordKeyMobileC(Conductor.songPosition, ids, 0));
+			hitbox.onButtonUp.add((button:TouchButton, ids:Array<MobileInputID>) -> recordKeyMobileC(Conductor.songPosition, ids, 1));
+		}
+		else
+			trace("Tried to init replay recorder for mobile controls but failed.");
+
+		var touchPad:TouchPad = state.controls.requestedInstance.touchPad;
+		if (touchPad != null) {
+			touchPad.onButtonDown.add((button:TouchButton, ids:Array<MobileInputID>) -> recordKeyMobileC(Conductor.songPosition, ids, 0));
+			touchPad.onButtonUp.add((button:TouchButton, ids:Array<MobileInputID>) -> recordKeyMobileC(Conductor.songPosition, ids, 1));
+		}
+		else
+			trace("Tried to init replay recorder for touch pad but failed.");
 	}
 
     public function save():Float {
