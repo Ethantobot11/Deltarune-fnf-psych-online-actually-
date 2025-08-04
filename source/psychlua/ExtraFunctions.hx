@@ -136,7 +136,6 @@ class ExtraFunctions
 						mobileShit = MusicBeatState.getState().hitbox?.buttonExtra?.justPressed == true;
 					return PlayState.instance.controls.justPressed('space') || mobileShit;
 				default: return PlayState.instance.controls.justPressed(name);
-				default: return PlayState.instance.controls.justPressed(name);
 			}
 			return false;
 		});
