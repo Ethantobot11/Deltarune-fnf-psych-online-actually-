@@ -17,11 +17,7 @@ import backend.Achievements;
 #if flxanimate
 import flxanimate.FlxAnimate;
 #end
-
-#if lumod
-import lumod.Lumod;
-#end
-
+  
 // Mobile Controls
 import mobile.objects.Hitbox;
 import mobile.objects.TouchPad;
@@ -30,6 +26,10 @@ import mobile.input.MobileInputID;
 import mobile.backend.MobileData;
 import mobile.input.MobileInputManager;
 import mobile.backend.TouchUtil;
+
+#if lumod
+import lumod.Lumod;
+#end
 
 import backend.Paths;
 import backend.Controls;
