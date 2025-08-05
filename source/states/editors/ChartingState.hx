@@ -42,8 +42,8 @@ import substates.Prompt;
 
 #if sys
 import openfl.media.Sound;
-import sys.FileSystem;
-import sys.io.File;
+import backend.io.PsychFileSystem as FileSystem;
+import backend.io.PsychFile as File;
 #end
 
 @:access(flixel.sound.FlxSound._sound)
@@ -335,6 +335,16 @@ class ChartingState extends MusicBeatState
 		UI_box.y = 25;
 		UI_box.scrollFactor.set();
 
+		if (controls.mobileC)
+			text = "Up/Down - Change Conductor's strum time
+		\nLeft/Right - Go to the previous/next section
+		\nHold Y to move 4x faster
+		\nZ/D - Zoom in/out
+		\n
+		\nC - Test your chart inside Chart Editor
+		\nA - Play your chart
+		\nX - Stop/Resume song";
+		else
 		text =
 		"W/S or Mouse Wheel - Change Conductor's strum time
 		\nA/D - Go to the previous/next section
@@ -1115,7 +1125,7 @@ class ChartingState extends MusicBeatState
 	var metronomeStepper:FlxUINumericStepper;
 	var metronomeOffsetStepper:FlxUINumericStepper;
 	var disableAutoScrolling:FlxUICheckBox;
-	#if desktop
+	#if (desktop || mobile)
 	var waveformUseInstrumental:FlxUICheckBox;
 	var waveformUseVoices:FlxUICheckBox;
 	#end
@@ -1125,7 +1135,7 @@ class ChartingState extends MusicBeatState
 		var tab_group_chart = new FlxUI(null, UI_box);
 		tab_group_chart.name = 'Charting';
 
-		#if desktop
+		#if (desktop || mobile)
 		if (FlxG.save.data.chart_waveformInst == null) FlxG.save.data.chart_waveformInst = false;
 		if (FlxG.save.data.chart_waveformVoices == null) FlxG.save.data.chart_waveformVoices = false;
 
@@ -1268,7 +1278,7 @@ class ChartingState extends MusicBeatState
 		tab_group_chart.add(disableAutoScrolling);
 		tab_group_chart.add(metronomeStepper);
 		tab_group_chart.add(metronomeOffsetStepper);
-		#if desktop
+		#if (desktop || mobile)
 		tab_group_chart.add(waveformUseInstrumental);
 		tab_group_chart.add(waveformUseVoices);
 		#end
@@ -1653,6 +1663,105 @@ class ChartingState extends MusicBeatState
 		FlxG.watch.addQuick('daBeat', curBeat);
 		FlxG.watch.addQuick('daStep', curStep);
 
+		if (controls.mobileC) {
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.justPressed)
+			{
+				if (touch.overlaps(curRenderedNotes))
+				{
+					curRenderedNotes.forEachAlive(function(note:Note)
+					{
+						if (touch.overlaps(note))
+						{
+							if (touchPad.buttonF.pressed)
+							{
+								selectNote(note);
+							}
+							else if (FlxG.keys.pressed.ALT)
+							{
+								selectNote(note);
+								curSelectedNote[3] = curNoteTypes[currentType];
+								updateGrid();
+							}
+							else
+							{
+								//trace('tryin to delete note...');
+								deleteNote(note);
+							}
+						}
+					});
+				}
+				else if (!touchPad.buttonF.pressed)
+				{
+					if (touch.x > gridBG.x
+						&& touch.x < gridBG.x + gridBG.width
+						&& touch.y > gridBG.y
+						&& touch.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom])
+					{
+						FlxG.log.add('added note');
+						addNote();
+					}
+				}
+			}
+
+			if (touch.x > gridBG.x
+				&& touch.x < gridBG.x + gridBG.width
+				&& touch.y > gridBG.y
+				&& touch.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom])
+			{
+				dummyArrow.visible = true;
+				dummyArrow.x = Math.floor(touch.x / GRID_SIZE) * GRID_SIZE;
+				if (FlxG.keys.pressed.SHIFT || touchPad.buttonY.pressed)
+					dummyArrow.y = touch.y;
+				else
+					dummyArrow.y = Math.floor(touch.y / GRID_SIZE) * GRID_SIZE;
+			}else{
+				dummyArrow.visible = false;
+			}
+		}
+
+		} else {
+
+		if (FlxG.mouse.justPressed)
+		{
+			if (FlxG.mouse.overlaps(curRenderedNotes))
+			{
+				curRenderedNotes.forEachAlive(function(note:Note)
+				{
+					if (FlxG.mouse.overlaps(note))
+					{
+						if (FlxG.keys.pressed.CONTROL)
+						{
+							selectNote(note);
+						}
+						else if (FlxG.keys.pressed.ALT)
+						{
+							selectNote(note);
+							curSelectedNote[3] = curNoteTypes[currentType];
+							updateGrid();
+						}
+						else
+						{
+							//trace('tryin to delete note...');
+							deleteNote(note);
+						}
+					}
+				});
+			}
+			else
+			{
+				if (FlxG.mouse.x > gridBG.x
+					&& FlxG.mouse.x < gridBG.x + gridBG.width
+					&& FlxG.mouse.y > gridBG.y
+					&& FlxG.mouse.y < gridBG.y + (GRID_SIZE * getSectionBeats() * 4) * zoomList[curZoom])
+				{
+					FlxG.log.add('added note');
+					addNote();
+				}
+			}
+		}
+
 
 		if (FlxG.mouse.x > gridBG.x
 			&& FlxG.mouse.x < gridBG.x + gridBG.width
@@ -1856,6 +1965,7 @@ class ChartingState extends MusicBeatState
 					resetSection();
 			}
 
+			if (!controls.mobileC) {
 			if (FlxG.mouse.wheel != 0)
 			{
 				FlxG.sound.music.pause();
@@ -2222,7 +2332,7 @@ class ChartingState extends MusicBeatState
 		gridBG.scale.set(GRID_SIZE, GRID_SIZE);
 		gridBG.updateHitbox();
 
-		#if desktop
+		#if (desktop || mobile)
 		if(FlxG.save.data.chart_waveformInst || FlxG.save.data.chart_waveformVoices) {
 			updateWaveform();
 		}
@@ -2290,7 +2400,7 @@ class ChartingState extends MusicBeatState
 
 	var lastWaveformHeight:Int = 0;
 	function updateWaveform() {
-		#if desktop
+		#if (desktop || mobile)
 		if(waveformPrinted) {
 			var width:Int = Std.int(GRID_SIZE * 8);
 			var height:Int = Std.int(gridBG.height);
