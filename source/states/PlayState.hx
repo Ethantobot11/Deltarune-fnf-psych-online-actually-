@@ -1927,6 +1927,7 @@ class PlayState extends MusicBeatState
 			setOnScripts('defaultOpponentStrumX' + i, opponentStrums.members[i].x);
 			setOnScripts('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
 			// if(ClientPrefs.data.middleScroll) opponentStrums.members[i].visible = false;
+		}
                 
 		addHitbox();
 		addTouchPad((replayData != null || cpuControlled) ? 'LEFT_RIGHT' : 'NONE', (GameClient.isConnected()) ? 'P_C_T' : (replayData != null || cpuControlled) ? #if android 'X_Y' : 'T' #else 'P_X_Y' : 'P_T' #end);
