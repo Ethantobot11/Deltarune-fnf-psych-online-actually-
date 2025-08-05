@@ -1484,13 +1484,12 @@ class FreeplayState extends MusicBeatState
 			infoText.text += " / BACK to return to Songs";
 
 		if (GameClient.isConnected()) {
-			#if !mobile replaysSelect.alpha -= 0.4; #end
-			modifiersSelect.alpha -= 0.4;
+		      #if !mobile replaysSelect.alpha -= 0.4; #end
+		      modifiersSelect.alpha -= 0.4;
 		} #if mobile else
-			replaysSelect.alpha -= 0.4;
+		      replaysSelect.alpha -= 0.4;
 		#end
 		}
-	}
 
 	function listenToSong() {
 		if (curSelected == -1)
