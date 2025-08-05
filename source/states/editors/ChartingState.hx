@@ -3114,6 +3114,7 @@ class ChartingState extends MusicBeatState
 		var noteStrum = getStrumTime(dummyArrow.y * (getSectionBeats() / 4), false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
+		if (controls.mobileC) {
 		var daAlt = false;
 		var daType = currentType;
 
@@ -3264,11 +3265,15 @@ class ChartingState extends MusicBeatState
 
 		if ((data != null) && (data.length > 0))
 		{
+			#if mobile
+			StorageUtil.saveContent('${Paths.formatToSongPath(_song.song)}.json', data.trim());
+			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data.trim(), Paths.formatToSongPath(_song.song) + ".json");
+			#end
 		}
 	}
 
@@ -3291,11 +3296,15 @@ class ChartingState extends MusicBeatState
 
 		if ((data != null) && (data.length > 0))
 		{
+			#if mobile
+			StorageUtil.saveContent('events.json', data.trim());
+			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data.trim(), "events.json");
+			#end
 		}
 	}
 
