@@ -47,7 +47,7 @@ import substates.GameplayChangersSubstate;
 import substates.ResetScoreSubState;
 
 #if MODS_ALLOWED
-import backend.io.PsychFileSystem as FileSystem;
+import sys.FileSystem;
 #end
 
 class FreeplayState extends MusicBeatState
@@ -126,7 +126,7 @@ class FreeplayState extends MusicBeatState
 	// var dShots:FlxTypedGroup<FlxEffectSprite> = new FlxTypedGroup<FlxEffectSprite>();
 	var diffSelect:Alphabet = new Alphabet(0, 0, "< ? >", true);
 	var modifiersSelect:Alphabet = new Alphabet(0, 0, !GameClient.isConnected() ? "GAMEPLAY MODIFIERS" : "MODIFIERS UNAVAILABLE HERE", true);
-	var replaysSelect:Alphabet = new Alphabet(0, 0, #if mobile "REPLAYS UNAVAILABLE" #else !GameClient.isConnected() ? "LOAD REPLAY" : "REPLAYS UNAVAILABLE" #end, true);
+	var replaysSelect:Alphabet = new Alphabet(0, 0, !GameClient.isConnected() ? "LOAD REPLAY" : "REPLAYS UNAVAILABLE", true);
 	var resetSelect:Alphabet = new Alphabet(0, 0, "RESET SCORE", true);
 
 	var topTitle:Alphabet = new Alphabet(0, 0, "LEADERBOARD", true);
@@ -359,8 +359,7 @@ class FreeplayState extends MusicBeatState
 		scoreBG.scrollFactor.set();
 		scoreBG.cameras = [hudCamera];
 
-		buttonS = (controls.mobileC) ? "S" : "F";
-		searchInput = new FlxText(scoreText.x, scoreText.y + 36, 0, "PRESS " + buttonS + " TO SEARCH", 24);
+		searchInput = new FlxText(scoreText.x, scoreText.y + 36, 0, "PRESS F TO SEARCH", 24);
 		searchInput.font = scoreText.font;
 		searchInput.scrollFactor.set();
 
@@ -602,9 +601,6 @@ class FreeplayState extends MusicBeatState
 		updateTexts();
 		searchString = searchString;
 
-                addTouchPad('LEFT_FULL', (GameClient.isConnected()) ? 'FREEPLAY_ONLINE' : 'FREEPLAY');
-		addTouchPadCamera();
-
 		super.create();
 
 		CustomFadeTransition.nextCamera = hudCamera;
@@ -747,9 +743,6 @@ class FreeplayState extends MusicBeatState
 		}
 
 		super.closeSubState();
-		removeTouchPad();
-		addTouchPad('LEFT_FULL', (GameClient.isConnected()) ? 'FREEPLAY_ONLINE' : 'FREEPLAY');
-		addTouchPadCamera();
 	}
 
 	function setDiffVisibility(value:Bool) {
@@ -848,14 +841,13 @@ class FreeplayState extends MusicBeatState
 			return;
 		}
 
-		if (!searchInputWait && (touchPad.buttonS.justPressed || FlxG.keys.justPressed.F)) {
-			FlxG.stage.window.textInputEnabled = true;
+		if (!searchInputWait && FlxG.keys.justPressed.F) {
 			searchInputWait = true;
 			searchString = searchString;
 		}
 
 		var shiftMult:Int = 1;
-		if(touchPad.buttonZ.pressed || FlxG.keys.pressed.SHIFT) shiftMult = 3;
+		if(FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!selected) {
 			if(songs.length > 0)
@@ -877,53 +869,11 @@ class FreeplayState extends MusicBeatState
 					changeSelection(-shiftMult);
 					holdTime = 0;
 				}
-									}
-					ClientPrefs.saveSettings();
-					search();
-				}
 				if (controls.UI_DOWN_P)
 				{
 					changeSelection(shiftMult);
 					holdTime = 0;
 				}
-
-				if ((touchPad.buttonF.justPressed || controls.FAV) && curSelected != -1) {
-					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
-					if (ClientPrefs.data.favSongs.contains(songId)) {
-						ClientPrefs.data.favSongs.remove(songId);
-
-						unfavSound.volume = 1;
-						unfavSound.play(true);
-					}
-					else {
-						ClientPrefs.data.favSongs.push(songId);
-
-						favSound.volume = 1;
-						favSound.play(true);
-					}
-					ClientPrefs.saveSettings();
-					search();
-				}
-
-				if (((touchPad.buttonR.justReleased && resetTotalHeld <= 3.5) || controls.RESET) && curSelected != -1 && !FlxG.keys.pressed.ALT) {
-					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
-					if (ClientPrefs.data.hiddenSongs.contains(songId)) {
-						ClientPrefs.data.hiddenSongs.remove(songId);
-					}
-					else {
-						ClientPrefs.data.hiddenSongs.push(songId);
-						destroyFreeplayVocals();
-						playFreakyMusic();
-						FlxG.sound.music.fadeIn(bustSound.length / 1000 + 1, 0, 0.7);
-
-						bustSound.volume = 1;
-						bustSound.play(true);
-
-						var exploAmount:Int = Std.int((grpSongs.members[curSelected].width + grpIcons.members[curSelected].width) / 80) + 1;
-						for (i in 0...exploAmount) {
-							var explood = explods.recycle(Explod);
-							explood.boom(cast grpSongs.members[curSelected], i);
-						}
 
 				if (controls.FAV && curSelected != -1) {
 					var songId = songs[curSelected].songName + '-' + songs[curSelected].folder;
@@ -984,16 +934,7 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if (touchPad.buttonR.pressed && resetTotalHeld <= 3.5)
-			{
-				resetTotalHeld += elapsed;
-				if (resetTotalHeld >= 3.5)
-					doSongReset = true;
-			} else if (touchPad.buttonR.released)
-				resetTotalHeld = 0;
-
-			if ((touchPad.buttonR.pressed && doSongReset) || (controls.RESET && FlxG.keys.pressed.ALT)) {
-				doSongReset = false;
+			if (controls.RESET && FlxG.keys.pressed.ALT) {
 				ClientPrefs.data.hiddenSongs = [];
 				ClientPrefs.saveSettings();
 				search();
@@ -1010,14 +951,6 @@ class FreeplayState extends MusicBeatState
 					search();
 					updateGroupTitle();
 				}
-
-				if (touchPad.buttonG.justPressed || FlxG.keys.justPressed.CONTROL) {
-					persistentUpdate = false;
-					var daCopy = searchGroupVList.copy();
-					for (i => item in daCopy)
-						daCopy[i] = formatGroupItem(item);
-
-					touchPad.visible = false;
 
 				if (FlxG.keys.justPressed.CONTROL) {
 					persistentUpdate = false;
@@ -1025,84 +958,6 @@ class FreeplayState extends MusicBeatState
 					for (i => item in daCopy)
 						daCopy[i] = formatGroupItem(item);
 					
-					var selState = new online.substates.SoFunkinSubstate(daCopy, searchGroupValue, i -> {
-						searchGroupValue = i;
-						search();
-						updateGroupTitle();
-						return true;
-					}, (i, leText) -> {
-						if (searchGroup == MIX) {
-							Mods.currentModDirectory = charsWeeksLoaded.get(searchGroupVList[i]);
-							var charaData:CharacterFile = Character.getCharacterFile(searchGroupVList[i]);
-							var iconName = charaData?.healthicon;
-							if (iconName != null) {
-								var icon = new HealthIcon(iconName, false);
-								icon.sprTracker = leText;
-								icon.scrollFactor.set(1, 1);
-								Mods.loadTopMod();
-								return icon;
-							}
-							Mods.loadTopMod();
-						}
-						return null;
-					});
-					selState.groups = FreeplayState.GROUPS;
-					selState.curGroup = FreeplayState.GROUPS.indexOf(ClientPrefs.data.groupSongsBy);
-					selState.groupCallback = i -> {
-						ClientPrefs.data.groupSongsBy = FreeplayState.GROUPS[i];
-						ClientPrefs.saveSettings();
-						updateGroups(true);
-			if (touchPad.buttonR.pressed && resetTotalHeld <= 3.5)
-			{
-				resetTotalHeld += elapsed;
-				if (resetTotalHeld >= 3.5)
-					doSongReset = true;
-			} else if (touchPad.buttonR.released)
-				resetTotalHeld = 0;
-
-			if ((touchPad.buttonR.pressed && doSongReset) || (controls.RESET && FlxG.keys.pressed.ALT)) {
-				doSongReset = false;
-				ClientPrefs.data.hiddenSongs = [];
-				ClientPrefs.saveSettings();
-				search();
-			}
-
-			if (searchGroupVList.length > 0) {
-				if (controls.UI_LEFT_P) {
-					searchGroupValue--;
-					search();
-					updateGroupTitle();
-				}
-				if (controls.UI_RIGHT_P) {
-					searchGroupValue++;
-					search();
-					updateGroupTitle();
-				}
-
-				if (touchPad.buttonG.justPressed || FlxG.keys.justPressed.CONTROL) {
-					persistentUpdate = false;
-					var daCopy = searchGroupVList.copy();
-					for (i => item in daCopy)
-						daCopy[i] = formatGroupItem(item);
-
-					touchPad.visible = false;
-					var selState = new online.substates.SoFunkinSubstate(daCopy, searchGroupValue, i -> {
-						searchGroupValue = i;
-						search();
-						updateGroupTitle();
-						return true;
-					}, (i, leText) -> {
-						if (searchGroup == MIX) {
-							Mods.currentModDirectory = charsWeeksLoaded.get(searchGroupVList[i]);
-							var charaData:CharacterFile = Character.getCharacterFile(searchGroupVList[i]);
-							var iconName = charaData?.healthicon;
-							if (iconName != null) {
-								var icon = new HealthIcon(iconName, false);
-								icon.sprTracker = leText;
-								icon.scrollFactor.set(1, 1);
-						daCopy[i] = formatGroupItem(item);
-
-					touchPad.visible = false;
 					var selState = new online.substates.SoFunkinSubstate(daCopy, searchGroupValue, i -> {
 						searchGroupValue = i;
 						search();
@@ -1165,7 +1020,7 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 
-			if(touchPad.buttonX.justPressed || FlxG.keys.justPressed.SPACE)
+			if(FlxG.keys.justPressed.SPACE)
 			{
 				if (curSelected == -1) {
 					var newSel = FlxG.random.int(0, songs.length - 1);
@@ -1198,9 +1053,10 @@ class FreeplayState extends MusicBeatState
 				leaderboardTimer = 0;
 			}
 
-			if (chatBox == null && touchPad.buttonY.justPressed || FlxG.keys.justPressed.TAB) {
+			if (chatBox == null && FlxG.keys.justPressed.TAB) {
 				persistentUpdate = false;
 				FlxG.switchState(() -> new online.states.SkinsState());
+			}
 		}
 		else {
 			if (controls.BACK || songs[curSelected] == null) {
@@ -1256,7 +1112,6 @@ class FreeplayState extends MusicBeatState
 							openSubState(new GameplayChangersSubstate());
 						}
 					case 2:
-						#if !mobile
 						if (!GameClient.isConnected()) {
 							if (!FileSystem.exists("replays/"))
 								FileSystem.createDirectory("replays/");
@@ -1267,7 +1122,6 @@ class FreeplayState extends MusicBeatState
 							});
 							fileDialog.open('funkinreplay', online.util.FileUtils.joinNativePath([Sys.getCwd(), "replays", "_"]), "Load Replay File");
 						}
-						#end
 					case 3:
 						persistentUpdate = false;
 						openSubState(new ResetScoreSubState(getSongName(), curDifficulty, songs[curSelected].songCharacter));
@@ -1299,76 +1153,6 @@ class FreeplayState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 			}
 			else if (controls.UI_DOWN_P || FlxG.mouse.wheel < 0) {
-				if (selectedItem == 4 && selectedScore != 14) {
-					selectedScore++;
-				}
-				else {
-					selectedItem++;
-
-					if (selectedItem > 4)
-						selectedItem = 0;
-
-					if (selectedItem == 4) {
-						selectedScore = 0;
-								missingTextBG.visible = true;
-								FlxG.sound.play(Paths.sound('cancelMenu'));
-
-								updateTexts(elapsed);
-							}
-						}
-						else {
-							enterSong();
-						}
-					case 1:
-						if (!GameClient.isConnected()) {
-							persistentUpdate = false;
-							_substateIsModifiers = true;
-							openSubState(new GameplayChangersSubstate());
-						}
-					case 2:
-						#if !mobile
-						if (!GameClient.isConnected()) {
-							if (!FileSystem.exists("replays/"))
-								FileSystem.createDirectory("replays/");
-
-							var fileDialog = new FileDialog();
-							fileDialog.onOpen.add(res -> {
-								playReplay(cast(res, Bytes).toString());
-							});
-							fileDialog.open('funkinreplay', online.util.FileUtils.joinNativePath([Sys.getCwd(), "replays", "_"]), "Load Replay File");
-						}
-						#end
-					case 3:
-						persistentUpdate = false;
-						openSubState(new ResetScoreSubState(getSongName(), curDifficulty, songs[curSelected].songCharacter));
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-					case 4:
-						if (!GameClient.isConnected()) {
-							if (top[selectedScore] != null)
-								playReplay(Leaderboard.fetchReplay(top[selectedScore].id), top[selectedScore].id);
-						}
-				}
-			}
-
-			if (controls.UI_UP_P) {
-				if (selectedItem == 4 && selectedScore != 0) {
-					selectedScore--;
-				}
-				else {
-					selectedItem--;
-
-					if (selectedItem < 0) {
-						selectedItem = 4;
-						selectedScore = 14;
-					}
-				}
-
-				topShit.selectRow(selectedItem != 4 ? -1 : selectedScore);
-				updateSelectSelection();
-
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-			}
-			else if (controls.UI_DOWN_P) {
 				if (selectedItem == 4 && selectedScore != 14) {
 					selectedScore++;
 				}
@@ -1420,7 +1204,7 @@ class FreeplayState extends MusicBeatState
 				}
 			}
 		}
-				
+
 		updateTexts(elapsed);
 		if (FlxG.keys.pressed.SHIFT && !selected) {
 			itemsCameraZoom = FlxMath.lerp(itemsCameraZoom, 0.65, elapsed * 10);
@@ -1584,13 +1368,6 @@ class FreeplayState extends MusicBeatState
 
 		itemsCamera.targetOffset.set(0, 0);
 
-		final accept:String = (controls.mobileC) ? 'A' : 'ACCEPT';
-		final back:String = (controls.mobileC) ? 'B' : 'BACK';
-		final space:String = (controls.mobileC) ? 'X' : 'SPACE';
-		final tab:String = (controls.mobileC) ? 'Y' : 'TAB';
-		final reset:String = (controls.mobileC) ? 'R' : 'RESET';
-		final keys:String = (controls.mobileC) ? 'Buttons' : 'Keys';
-
 		if (curSelected == -1) {
 			infoText.text = "ACCEPT to select a random song / SPACE to select without loading / CTRL to select song group";
 			if (chatBox == null)
@@ -1682,11 +1459,9 @@ class FreeplayState extends MusicBeatState
 			infoText.text += " / BACK to return to Songs";
 
 		if (GameClient.isConnected()) {
-			#if !mobile replaysSelect.alpha -= 0.4; #end
-			modifiersSelect.alpha -= 0.4;
-		} #if mobile else
 			replaysSelect.alpha -= 0.4;
-		#end
+			modifiersSelect.alpha -= 0.4;
+		}
 	}
 
 	function listenToSong() {
