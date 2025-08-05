@@ -9,8 +9,8 @@ import Type.ValueType;
 import substates.GameOverSubstate;
 
 #if sys
-import sys.FileSystem;
-import sys.io.File;
+import backend.io.PsychFileSystem as FileSystem;
+import backend.io.PsychFile as File;
 #end
 
 typedef LuaTweenOptions = {
