@@ -502,8 +502,6 @@ class PlayState extends MusicBeatState
 
 	public var luaTouchPad:TouchPad;
 
-	public var luaTouchPad:TouchPad;
-
 	public var playOtherSide:Bool = false;
 
 	var nameplates:FlxTypedGroup<FlxText> = new FlxTypedGroup<FlxText>();
