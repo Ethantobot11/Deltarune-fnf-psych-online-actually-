@@ -20,7 +20,7 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/Ethantobot11/lime2"
+      "url": "https://github.com/AnDevGo/lime"
     },
     {
       "name": "lime",
@@ -32,7 +32,7 @@
       "type": "git",
       "dir": null,
       "ref": "develop",
-      "url": "https://github.com/Ethantobot11/Better-openfl"
+      "url": "https://github.com/AnDevGo/openfl"
     },
     {
       "name": "openfl",
