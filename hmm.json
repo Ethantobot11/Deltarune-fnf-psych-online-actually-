@@ -19,13 +19,13 @@
       "name": "lime",
       "type": "git",
       "dir": null,
-      "ref": "main",
+      "ref": "develop",
       "url": "https://github.com/AnDevGo/lime_pro"
     },
     {
       "name": "lime",
       "type": "haxelib",
-      "version": "8.2.0"
+      "version": "8.1.3"
     },
     {
       "name": "openfl",
