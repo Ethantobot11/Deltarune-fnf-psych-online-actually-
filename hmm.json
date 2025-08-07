@@ -66,7 +66,7 @@
       "type": "git",
       "dir": null,
       "ref": "main",
-      "url": "https://github.com/th2l-devs/SScript"
+      "url": "https://github.com/Ethantobot11/SScript-7.7.0"
     },
     {
       "name": "hxdiscord_rpc",
@@ -77,7 +77,7 @@
       "name": "linc_luajit",
       "type": "git",
       "dir": null,
-      "ref": "master",
+      "ref": "main",
       "url": "https://github.com/kittycathy233/linc_luajit"
     },
     {
